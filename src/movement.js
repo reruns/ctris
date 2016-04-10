@@ -43,6 +43,28 @@ var shift = function(piece, dir, grid) {
   return (safePosition(p.cells, grid) ? p : piece);
 }
 
+//Returns true if the current piece is directly on top of something.
+var resting = function(piece, grid) {
+  let p = {
+    type: piece.type,
+    loc: [piece.loc[0]+1, piece.loc[1]],
+    orient: piece.orient,
+    cells: [[]]
+  }
+  p.cells = updateCells(p);
+  return !safePosition(p.cells, grid);
+}
+
+var advance = function(piece, grav, grid) {
+  while (grav > 0) {
+    grav -= 1;
+    piece.loc[0] += 1;
+
+    if (resting(piece, grid))
+      return piece
+  }
+}
+
 function safePosition(cells, grid) {
   //if the coordinate goes off the side, we'll compare with undefined
   //which still works, thankfully.
@@ -150,4 +172,4 @@ function updateICells(p) {
   }
 }
 
-export { rotate, shift }
+export { rotate, shift, resting }

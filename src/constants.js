@@ -1,8 +1,10 @@
 const INITSTATE = {
   score: 0,
-  currentPiece: {type: -1, orient: 0, loc: 0, cells: [[]]},
+  soft: 0,
+  currentPiece: {type: -1, orient: 0, loc: 0, lockDelay: 30, cells: [[]]},
   das: {count: 0, dir: 'L'},
-  gravity: {count: 64, g: 1},
+  clearedLines: [],
+  gravity: {count: 256, g: 1, internal: 4},
   nextPieceType: -1,
   grid: [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
          [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -27,4 +29,56 @@ const INITSTATE = {
          [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
 }
 
-export { INITSTATE }
+const GRAVS =[
+[500,{count: 256, g: 20, internal: 256}],
+[450,{count: 256, g: 3, internal: 256}],
+[420,{count: 256, g: 4, internal: 256}],
+[400,{count: 256, g: 5, internal: 256}],
+[360,{count: 256, g: 4, internal: 256}],
+[330,{count: 256, g: 3, internal: 256}],
+[300,{count: 256, g: 2, internal: 256}],
+[251,{count: 256, g: 1, internal: 256}],
+[247,{count: 256, g: 1, internal: 192}],
+[243,{count: 256, g: 1, internal: 160}],
+[239,{count: 256, g: 1, internal: 128}],
+[236,{count: 256, g: 1, internal: 128}],
+[233,{count: 256, g: 1, internal: 96}],
+[230,{count: 256, g: 1, internal: 64}],
+[220,{count: 256, g: 1, internal: 32}],
+[200,{count: 256, g: 1, internal: 4}],
+[170,{count: 256, g: 1, internal: 144}],
+[160,{count: 256, g: 1, internal: 128}],
+[140,{count: 256, g: 1, internal: 112}],
+[120,{count: 256, g: 1, internal: 96}],
+[100,{count: 256, g: 1, internal: 80}],
+[90,{count: 256, g: 1, internal: 64}],
+[80,{count: 256, g: 1, internal: 48}],
+[70,{count: 256, g: 1, internal: 32}],
+[60,{count: 256, g: 1, internal: 16}],
+[50,{count: 256, g: 1, internal: 12}],
+[40,{count: 256, g: 1, internal: 10}],
+[35,{count: 256, g: 1, internal: 8}],
+[30,{count: 256, g: 1, internal: 6}],
+[0,{count: 256, g: 1, internal: 4}]]
+
+const GRADES = [
+[120000,"S9"],
+[100000,"S8"],
+[82000,"S7"],
+[66000,"S6"],
+[52000,"S5"],
+[40000,"S4"],
+[30000,"S3"],
+[22000,"S2"],
+[16000, "S1"],
+[12000,"1"],
+[8000, "2"],
+[5500, "3"],
+[3500, "4"],
+[2000, "5"],
+[1400, "6"],
+[800, "7"],
+[400, "8"],
+[0,"9"]]
+
+export { INITSTATE, GRAVS, GRADES }

@@ -64,6 +64,8 @@
 	});
 	exports.rotateActionCreator = exports.store = undefined;
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _redux = __webpack_require__(2);
 
 	var _constants = __webpack_require__(14);
@@ -97,6 +99,9 @@
 	    case 'ROTATE':
 	      state.currentPiece = (0, _movement.rotate)(state.currentPiece, action.dir, state.grid);
 	      return state;
+	    //once the animation is done, we dispatch an action to actually remove the lines
+	    case 'CLEANUP':
+	      return state;
 	    //unfortunately, most of the other things are pretty entangled.
 	    case 'UPDATE':
 	      //das and shifting
@@ -104,14 +109,77 @@
 	      if (state.are < 27 && state.are > 1 && (action.controls == 'L' || action.controls == 'R')) {
 	        if (state.das.dir === action.controls) {
 	          if (state.das.count == 0) {
-	            state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+	            state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls, state.grid);
 	          } else {
 	            state.das.count -= 1;
 	          }
 	        } else {
-	          state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+	          state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls, state.grid);
 	          state.das.direction = direction;
 	          state.das.count = 14;
+	        }
+	      }
+
+	      //Advancing the current piece and locking
+	      if (action.controls === "D") {
+	        state.currentPiece.lockDelay = 0;
+	        state.gravity.count = state.gravity.internal;
+	        state.soft += 1;
+	      }
+	      //Is anything below us?
+	      if ((0, _movement.resting)(state.currentPiece, state.grid)) {
+	        if (state.currentPiece.lockDelay === 0) {
+	          (function () {
+	            var rows = [];
+	            state.currentPiece.cells.forEach(function (cell) {
+	              var _cell = _slicedToArray(cell, 2);
+
+	              var y = _cell[0];
+	              var x = _cell[1];
+
+	              if (rows.indexOf(y) === -1) rows = rows.concat(y);
+	              grid[y][x] = state.currentPiece.type;
+	            });
+
+	            // check for cleared lines
+	            rows.forEach(function (row) {
+	              if (grid[row].every(function (cell) {
+	                return cell != -1;
+	              })) state.clearedLines = state.clearedLines.concat(row);
+	            });
+
+	            var lines = clearedLines.length;
+	            if (lines === 0) state.combo = 1;else state.combo = state.combo + 2 * lines - 2;
+
+	            //if the line above the highest line we cleared is empty, the screen is clear
+	            var bravo = 1;
+	            if (lines != 0 && grid[state.clearedLines[0] - 1].every(function (cell) {
+	              return cell == -1;
+	            })) bravo = 4;
+
+	            //update score
+	            state.score += ((state.level + lines) / 4 + state.soft) * lines * (2 * lines - 1) * combo * bravo;
+	            // advance the level
+	            if (lines > 0) {
+	              state.level += lines + 1;
+	            } else if (state.level % 100 != 99 && state.level != 998) {
+	              state.level += 1;
+	            }
+
+	            // reset gravity + soft
+	            state.gravity = updateGravity(state.level);
+	            state.grade = updateGrade(state.score);
+	            //state.canGM = updateGMStatus(state.level, state.grade, state.timer);
+	            state.soft = 0;
+	          })();
+	        } else {
+	          state.currentPiece.lockDelay -= 1;
+	        }
+	      } else {
+	        state.gravity.count -= state.gravity.internal;
+	        if (state.gravity.count <= 0) {
+	          state.currentPiece = advance(state.currentPiece, state.gravity.g, state.grid);
+	          state.gravity.count += 256;
 	        }
 	      }
 
@@ -135,6 +203,22 @@
 	    type: 'UPDATE',
 	    controls: controls
 	  };
+	};
+
+	function _newVal(table, key) {
+	  for (var i = 0; i < table.length; i++) {
+	    if (key >= table[i][0]) {
+	      return table[i][1];
+	    }
+	  }
+	}
+
+	var updateGravity = function updateGravity(level) {
+	  return _newVal(_constants.GRAVS, level);
+	};
+
+	var updateGrade = function updateGrade(score) {
+	  return _newVal(_constants.GRADES, score);
 	};
 
 	exports.store = store;
@@ -991,20 +1075,29 @@
 /* 14 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	       value: true
 	});
 	var INITSTATE = {
 	       score: 0,
-	       currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]] },
+	       soft: 0,
+	       currentPiece: { type: -1, orient: 0, loc: 0, lockDelay: 30, cells: [[]] },
 	       das: { count: 0, dir: 'L' },
+	       clearedLines: [],
+	       gravity: { count: 256, g: 1, internal: 4 },
 	       nextPieceType: -1,
 	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
 
+	var GRAVS = [[500, { count: 256, g: 20, internal: 256 }], [450, { count: 256, g: 3, internal: 256 }], [420, { count: 256, g: 4, internal: 256 }], [400, { count: 256, g: 5, internal: 256 }], [360, { count: 256, g: 4, internal: 256 }], [330, { count: 256, g: 3, internal: 256 }], [300, { count: 256, g: 2, internal: 256 }], [251, { count: 256, g: 1, internal: 256 }], [247, { count: 256, g: 1, internal: 192 }], [243, { count: 256, g: 1, internal: 160 }], [239, { count: 256, g: 1, internal: 128 }], [236, { count: 256, g: 1, internal: 128 }], [233, { count: 256, g: 1, internal: 96 }], [230, { count: 256, g: 1, internal: 64 }], [220, { count: 256, g: 1, internal: 32 }], [200, { count: 256, g: 1, internal: 4 }], [170, { count: 256, g: 1, internal: 144 }], [160, { count: 256, g: 1, internal: 128 }], [140, { count: 256, g: 1, internal: 112 }], [120, { count: 256, g: 1, internal: 96 }], [100, { count: 256, g: 1, internal: 80 }], [90, { count: 256, g: 1, internal: 64 }], [80, { count: 256, g: 1, internal: 48 }], [70, { count: 256, g: 1, internal: 32 }], [60, { count: 256, g: 1, internal: 16 }], [50, { count: 256, g: 1, internal: 12 }], [40, { count: 256, g: 1, internal: 10 }], [35, { count: 256, g: 1, internal: 8 }], [30, { count: 256, g: 1, internal: 6 }], [0, { count: 256, g: 1, internal: 4 }]];
+
+	var GRADES = [[120000, "S9"], [100000, "S8"], [82000, "S7"], [66000, "S6"], [52000, "S5"], [40000, "S4"], [30000, "S3"], [22000, "S2"], [16000, "S1"], [12000, "1"], [8000, "2"], [5500, "3"], [3500, "4"], [2000, "5"], [1400, "6"], [800, "7"], [400, "8"], [0, "9"]];
+
 	exports.INITSTATE = INITSTATE;
+	exports.GRAVS = GRAVS;
+	exports.GRADES = GRADES;
 
 /***/ },
 /* 15 */
@@ -1015,6 +1108,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var rotate = function rotate(piece, dir, grid) {
 	  if (piece.type == 2) return piece;
 
@@ -1043,6 +1139,8 @@
 	};
 
 	var shift = function shift(piece, dir, grid) {
+	  if (piece.type === -1) return;
+
 	  var p = {
 	    type: piece.type,
 	    loc: [piece.loc[0], piece.loc[1] + (dir === 'L' ? -1 : 1)],
@@ -1052,6 +1150,27 @@
 
 	  p.cells = updateCells(p);
 	  return safePosition(p.cells, grid) ? p : piece;
+	};
+
+	//Returns true if the current piece is directly on top of something.
+	var resting = function resting(piece, grid) {
+	  var p = {
+	    type: piece.type,
+	    loc: [piece.loc[0] + 1, piece.loc[1]],
+	    orient: piece.orient,
+	    cells: [[]]
+	  };
+	  p.cells = updateCells(p);
+	  return !safePosition(p.cells, grid);
+	};
+
+	var advance = function advance(piece, grav, grid) {
+	  while (grav > 0) {
+	    grav -= 1;
+	    piece.loc[0] += 1;
+
+	    if (resting(piece, grid)) return piece;
+	  }
 	};
 
 	function safePosition(cells, grid) {
@@ -1087,8 +1206,11 @@
 	function updateZCells(p) {
 	  p.orient = p.orient % 2;
 
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+	  var _p$loc = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc[0];
+	  var x = _p$loc[1];
+
 
 	  if (p.orient === 0) {
 	    return [[y, x], [y + 1, x], [y + 1, x + 1], [y, x - 1]];
@@ -1100,8 +1222,11 @@
 	function updateSCells(p) {
 	  p.orient = p.orient % 2;
 
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+	  var _p$loc2 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc2[0];
+	  var x = _p$loc2[1];
+
 
 	  if (p.orient == 0) {
 	    return [[y, x], [y, x + 1], [y + 1, x], [y + 1, x - 1]];
@@ -1112,16 +1237,24 @@
 
 	function updateOCells(p) {
 	  p.orient = 0;
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+
+	  var _p$loc3 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc3[0];
+	  var x = _p$loc3[1];
+
 
 	  return [[y, x], [y, x + 1], [y + 1, x], [y + 1, x + 1]];
 	}
 
 	function updateTCells(p) {
 	  p.orient = p.orient % 4;
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+
+	  var _p$loc4 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc4[0];
+	  var x = _p$loc4[1];
+
 
 	  switch (p.orient) {
 	    case 0:
@@ -1137,8 +1270,12 @@
 
 	function updateLCells(p) {
 	  p.orient = p.orient % 4;
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+
+	  var _p$loc5 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc5[0];
+	  var x = _p$loc5[1];
+
 
 	  switch (p.orient) {
 	    case 0:
@@ -1154,8 +1291,12 @@
 
 	function updateJCells(p) {
 	  p.orient = p.orient % 4;
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+
+	  var _p$loc6 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc6[0];
+	  var x = _p$loc6[1];
+
 
 	  switch (p.orient) {
 	    case 0:
@@ -1171,8 +1312,12 @@
 
 	function updateICells(p) {
 	  p.orient = p.orient % 2;
-	  var x = p.loc[1];
-	  var y = p.loc[0];
+
+	  var _p$loc7 = _slicedToArray(p.loc, 2);
+
+	  var y = _p$loc7[0];
+	  var x = _p$loc7[1];
+
 
 	  if (p.orient == 0) {
 	    return [[y, x], [y, x - 1], [y, x + 1], [y, x + 2]];
@@ -1182,6 +1327,8 @@
 	}
 
 	exports.rotate = rotate;
+	exports.shift = shift;
+	exports.resting = resting;
 
 /***/ },
 /* 16 */
