@@ -78,21 +78,10 @@
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? _constants.INITSTATE : arguments[0];
 	  var action = arguments[1];
 
-	  //if (state.nextPieceType === -1) {
-	  //state.nextPiece = BTris.generateTGM1();
-	  //   for(var i=0; i < 10; i++) {
-	  //     for(var j=0; j < 21; j++) {
-	  //       state.grid[i][j] = -1;
-	  //     }
-	  //   }
-	  //   return state;
-	  // }
-
-	  //TODO: this is debug only
-	  if (state.currentPiece.type === -1) {
-	    state.currentPiece.type = (0, _blockGenerators.generateDummy)();
-	    state.currentPiece.loc = [1, 4];
-	    state.currentPiece.orient = 0;
+	  //on the first frame only, generate the first piece
+	  if (state.nextPieceType === -1) {
+	    state.nextPiece = BTris.generateTGM1();
+	    return state;
 	  }
 
 	  switch (action.type) {
@@ -104,17 +93,34 @@
 	      return state;
 	    //unfortunately, most of the other things are pretty entangled.
 	    case 'UPDATE':
+	      //we're between moves
+	      if (state.currentPiece.type === -1) {
+	        if (state.are === 0) {
+	          state.currentPiece.type = state.nextPieceType;
+	          state.currentPiece.loc = [4, 1];
+	          state.currentPiece = ResolveIRS(state.currentPiece, action.controls.button, state.grid);
+	          state.nextPieceType = (0, _blockGenerators.generateTGM1)();
+	          if (state.orientation == -1) {
+	            state.gameOver = true;
+	            return state;
+	          }
+	        } else {
+	          state.are -= 1;
+	          return state;
+	        }
+	      }
+
 	      //das and shifting
 	      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-	      if (state.are < 27 && state.are > 1 && (action.controls == 'L' || action.controls == 'R')) {
+	      if (state.are < 27 && state.are > 1 && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
 	        if (state.das.dir === action.controls) {
 	          if (state.das.count == 0) {
-	            state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls, state.grid);
+	            state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
 	          } else {
 	            state.das.count -= 1;
 	          }
 	        } else {
-	          state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls, state.grid);
+	          state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
 	          state.das.direction = direction;
 	          state.das.count = 14;
 	        }
@@ -1088,6 +1094,7 @@
 	       clearedLines: [],
 	       gravity: { count: 256, g: 1, internal: 4 },
 	       nextPieceType: -1,
+	       gameOver: false,
 	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
 
@@ -1112,7 +1119,7 @@
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var rotate = function rotate(piece, dir, grid) {
-	  if (piece.type == 2) return piece;
+	  if (piece.type == 2 || piece.type == -1) return piece;
 
 	  var p = {
 	    type: piece.type,
@@ -1134,6 +1141,38 @@
 	    p = updateCells(p);
 	    if (safePosition(p.cells, grid)) return p;
 
+	    return piece;
+	  }
+	};
+
+	//similar to rotate...
+	var resolveIRS = function resolveIRS(piece, dir, grid) {
+	  var p = {
+	    type: piece.type,
+	    loc: [piece.loc[0], piece.loc[1]],
+	    orient: piece.orient,
+	    cells: [[]]
+	  };
+
+	  switch (dir) {
+	    case 'CCW':
+	      p.orient += 3;
+	      break;
+	    case 'CW':
+	      p.orient += 1;
+	      break;
+	    default:
+	      break;
+	  }
+	  p.cells = updateCells(p);
+
+	  if (safePosition(p.cells, grid)) {
+	    return p;
+	  } else if (safePosition(piece, grid)) {
+	    return piece;
+	  } else {
+	    piece.cells = updateCells(piece);
+	    piece.orient = -1;
 	    return piece;
 	  }
 	};
@@ -1168,6 +1207,7 @@
 	  while (grav > 0) {
 	    grav -= 1;
 	    piece.loc[0] += 1;
+	    piece.cells = updateCells(piece);
 
 	    if (resting(piece, grid)) return piece;
 	  }
@@ -1329,6 +1369,7 @@
 	exports.rotate = rotate;
 	exports.shift = shift;
 	exports.resting = resting;
+	exports.resolveIRS = resolveIRS;
 
 /***/ },
 /* 16 */

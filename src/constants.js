@@ -6,6 +6,7 @@ const INITSTATE = {
   clearedLines: [],
   gravity: {count: 256, g: 1, internal: 4},
   nextPieceType: -1,
+  gameOver: false,
   grid: [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
          [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
          [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],

@@ -1,5 +1,5 @@
 var rotate = function(piece, dir, grid) {
-  if (piece.type == 2)
+  if (piece.type == 2 || piece.type == -1)
     return piece;
 
   let p = {
@@ -24,6 +24,37 @@ var rotate = function(piece, dir, grid) {
     if (safePosition(p.cells, grid))
       return p
 
+    return piece;
+  }
+}
+
+//similar to rotate...
+var resolveIRS = function (piece, dir, grid) {
+  let p = {
+    type: piece.type,
+    loc: [piece.loc[0], piece.loc[1]],
+    orient: piece.orient,
+    cells: [[]]
+  }
+
+  switch(dir) {
+    case 'CCW':
+      p.orient += 3;
+      break;
+    case 'CW':
+      p.orient += 1;
+      break;
+    default: break;
+  }
+  p.cells = updateCells(p);
+
+  if (safePosition(p.cells, grid)) {
+    return p
+  } else if (safePosition(piece, grid)) {
+    return piece
+  } else {
+    piece.cells = updateCells(piece);
+    piece.orient = -1;
     return piece;
   }
 }
@@ -59,6 +90,7 @@ var advance = function(piece, grav, grid) {
   while (grav > 0) {
     grav -= 1;
     piece.loc[0] += 1;
+    piece.cells = updateCells(piece);
 
     if (resting(piece, grid))
       return piece
@@ -172,4 +204,4 @@ function updateICells(p) {
   }
 }
 
-export { rotate, shift, resting }
+export { rotate, shift, resting, resolveIRS }
