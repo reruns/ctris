@@ -24,7 +24,25 @@ var btris = function(state = INITSTATE, action) {
   switch (action.type) {
     case 'ROTATE':
       state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
-      console.log(state.currentPiece);
+      return state;
+    //unfortunately, most of the other things are pretty entangled.
+    case 'UPDATE':
+      //das and shifting
+      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
+      if (state.are < 27 && state.are > 1 && (action.controls == 'L' || action.controls == 'R')) {
+        if (state.das.dir === action.controls) {
+          if (state.das.count == 0) {
+            state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+          } else {
+            state.das.count -= 1;
+          }
+        } else {
+          state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+          state.das.direction = direction;
+          state.das.count = 14
+        }
+      }
+      
       return state;
     default:
       return state;
@@ -37,6 +55,13 @@ var rotateActionCreator = function(dir) {
   return {
     type: 'ROTATE',
     dir: dir
+  }
+}
+
+var updateActionCreator = function(controls) {
+  return {
+    type: 'UPDATE',
+    controls: controls
   }
 }
 

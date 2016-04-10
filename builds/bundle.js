@@ -96,7 +96,25 @@
 	  switch (action.type) {
 	    case 'ROTATE':
 	      state.currentPiece = (0, _movement.rotate)(state.currentPiece, action.dir, state.grid);
-	      console.log(state.currentPiece);
+	      return state;
+	    //unfortunately, most of the other things are pretty entangled.
+	    case 'UPDATE':
+	      //das and shifting
+	      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
+	      if (state.are < 27 && state.are > 1 && (action.controls == 'L' || action.controls == 'R')) {
+	        if (state.das.dir === action.controls) {
+	          if (state.das.count == 0) {
+	            state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+	          } else {
+	            state.das.count -= 1;
+	          }
+	        } else {
+	          state.currentPiece = shift(state.currentPiece, action.controls, state.grid);
+	          state.das.direction = direction;
+	          state.das.count = 14;
+	        }
+	      }
+
 	      return state;
 	    default:
 	      return state;
@@ -109,6 +127,13 @@
 	  return {
 	    type: 'ROTATE',
 	    dir: dir
+	  };
+	};
+
+	var updateActionCreator = function updateActionCreator(controls) {
+	  return {
+	    type: 'UPDATE',
+	    controls: controls
 	  };
 	};
 
@@ -973,7 +998,8 @@
 	});
 	var INITSTATE = {
 	       score: 0,
-	       currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]], das: { count: 0, dir: 'L' } },
+	       currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]] },
+	       das: { count: 0, dir: 'L' },
 	       nextPieceType: -1,
 	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
@@ -1016,11 +1042,23 @@
 	  }
 	};
 
+	var shift = function shift(piece, dir, grid) {
+	  var p = {
+	    type: piece.type,
+	    loc: [piece.loc[0], piece.loc[1] + (dir === 'L' ? -1 : 1)],
+	    orient: piece.orient,
+	    cells: [[]]
+	  };
+
+	  p.cells = updateCells(p);
+	  return safePosition(p.cells, grid) ? p : piece;
+	};
+
 	function safePosition(cells, grid) {
+	  //if the coordinate goes off the side, we'll compare with undefined
+	  //which still works, thankfully.
 	  for (var i = 0; i < 4; i++) {
-	    console.log(cells[i][0]);
-	    console.log(cells[i][1]);
-	    if (grid[cells[i][0]][cells[i][1]] != -1) return false;
+	    if (grid[cells[i][0]][cells[i][1]] !== -1) return false;
 	  }
 	  return true;
 	}

@@ -28,6 +28,21 @@ var rotate = function(piece, dir, grid) {
   }
 }
 
+var shift = function(piece, dir, grid) {
+  if (piece.type === -1)
+    return
+
+  let p = {
+    type: piece.type,
+    loc: [piece.loc[0], piece.loc[1] + (dir === 'L' ? -1 : 1)],
+    orient: piece.orient,
+    cells: [[]]
+  }
+
+  p.cells = updateCells(p);
+  return (safePosition(p.cells, grid) ? p : piece);
+}
+
 function safePosition(cells, grid) {
   //if the coordinate goes off the side, we'll compare with undefined
   //which still works, thankfully.
