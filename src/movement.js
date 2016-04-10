@@ -159,4 +159,4 @@ function updateICells(p) {
   }
 }
 
-export { rotate }
+export { rotate, shift }
