@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import { INITSTATE } from './constants.js'
 import { rotate } from './movement.js'
+import { generateTGM1, generateDummy } from './blockGenerators.js'
 
 var btris = function(state = INITSTATE, action) {
   //if (state.nextPieceType === -1) {
@@ -13,9 +14,17 @@ var btris = function(state = INITSTATE, action) {
   //   return state;
   // }
 
+  //TODO: this is debug only
+  if (state.currentPiece.type === -1) {
+    state.currentPiece.type = generateDummy()
+    state.currentPiece.loc = [1,4]
+    state.currentPiece.orient = 0;
+  }
+
   switch (action.type) {
     case 'ROTATE':
-      //state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
+      state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
+      console.log(state.currentPiece);
       return state;
     default:
       return state;

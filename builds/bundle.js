@@ -49,6 +49,9 @@
 	var _state = __webpack_require__(1);
 
 	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
+	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
+	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
+	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
 
 /***/ },
 /* 1 */
@@ -65,6 +68,10 @@
 
 	var _constants = __webpack_require__(14);
 
+	var _movement = __webpack_require__(15);
+
+	var _blockGenerators = __webpack_require__(16);
+
 	var btris = function btris() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? _constants.INITSTATE : arguments[0];
 	  var action = arguments[1];
@@ -79,9 +86,17 @@
 	  //   return state;
 	  // }
 
+	  //TODO: this is debug only
+	  if (state.currentPiece.type === -1) {
+	    state.currentPiece.type = (0, _blockGenerators.generateDummy)();
+	    state.currentPiece.loc = [1, 4];
+	    state.currentPiece.orient = 0;
+	  }
+
 	  switch (action.type) {
 	    case 'ROTATE':
-	      //state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
+	      state.currentPiece = (0, _movement.rotate)(state.currentPiece, action.dir, state.grid);
+	      console.log(state.currentPiece);
 	      return state;
 	    default:
 	      return state;
@@ -954,16 +969,223 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	       value: true
 	});
 	var INITSTATE = {
-	  score: 0,
-	  currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]], das: { count: 0, dir: 'L' } },
-	  nextPieceType: -1,
-	  grid: [[]]
+	       score: 0,
+	       currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]], das: { count: 0, dir: 'L' } },
+	       nextPieceType: -1,
+	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
 
 	exports.INITSTATE = INITSTATE;
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var rotate = function rotate(piece, dir, grid) {
+	  if (piece.type == 2) return piece;
+
+	  var p = {
+	    type: piece.type,
+	    loc: [piece.loc[0], piece.loc[1]],
+	    orient: piece.orient + (dir == 'CCW' ? 3 : 1),
+	    cells: [[]]
+	  };
+
+	  p.cells = updateCells(p);
+
+	  if (safePosition(p.cells, grid)) {
+	    return p;
+	  } else {
+	    p.loc[1] += 1;
+	    p = updateCells(p);
+	    if (safePosition(p.cells, grid)) return p;
+
+	    p.loc[1] -= 2;
+	    p = updateCells(p);
+	    if (safePosition(p.cells, grid)) return p;
+
+	    return piece;
+	  }
+	};
+
+	function safePosition(cells, grid) {
+	  for (var i = 0; i < 4; i++) {
+	    console.log(cells[i][0]);
+	    console.log(cells[i][1]);
+	    if (grid[cells[i][0]][cells[i][1]] != -1) return false;
+	  }
+	  return true;
+	}
+
+	function updateCells(p) {
+	  switch (p.type) {
+	    case 0:
+	      return updateZCells(p); //Z
+	    case 1:
+	      return updateSCells(p); //S
+	    case 2:
+	      return updateOCells(p); //O
+	    case 3:
+	      return updateTCells(p); //T
+	    case 4:
+	      return updateLCells(p); //L
+	    case 5:
+	      return updateJCells(p); //J
+	    case 6:
+	      return updateICells(p); //I
+	    default:
+	      return [['x', 'x'], ['x', 'x'], ['x', 'x'], ['x', 'x']];
+	  }
+	}
+
+	function updateZCells(p) {
+	  p.orient = p.orient % 2;
+
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  if (p.orient === 0) {
+	    return [[y, x], [y + 1, x], [y + 1, x + 1], [y, x - 1]];
+	  } else {
+	    return [[y, x], [y, x + 1], [y - 1, x + 1], [y + 1, x]];
+	  }
+	}
+
+	function updateSCells(p) {
+	  p.orient = p.orient % 2;
+
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  if (p.orient == 0) {
+	    return [[y, x], [y, x + 1], [y + 1, x], [y + 1, x - 1]];
+	  } else {
+	    return [[y, x], [y + 1, x], [y, x - 1], [y - 1, x - 1]];
+	  }
+	}
+
+	function updateOCells(p) {
+	  p.orient = 0;
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  return [[y, x], [y, x + 1], [y + 1, x], [y + 1, x + 1]];
+	}
+
+	function updateTCells(p) {
+	  p.orient = p.orient % 4;
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  switch (p.orient) {
+	    case 0:
+	      return [[y, x], [y, x - 1], [y, x + 1], [y + 1, x]];
+	    case 1:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y, x - 1]];
+	    case 2:
+	      return [[y, x], [y + 1, x], [y + 1, x - 1], [y + 1, x + 1]];
+	    case 3:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y, x + 1]];
+	  }
+	}
+
+	function updateLCells(p) {
+	  p.orient = p.orient % 4;
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  switch (p.orient) {
+	    case 0:
+	      return [[y, x], [y, x + 1], [y, x - 1], [y + 1, x - 1]];
+	    case 1:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y - 1, x - 1]];
+	    case 2:
+	      return [[y, x + 1], [y + 1, x], [y + 1, x - 1], [y + 1, x + 1]];
+	    case 3:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y + 1, x + 1]];
+	  }
+	}
+
+	function updateJCells(p) {
+	  p.orient = p.orient % 4;
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  switch (p.orient) {
+	    case 0:
+	      return [[y, x], [y, x - 1], [y, x + 1], [y + 1, x + 1]];
+	    case 1:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y + 1, x - 1]];
+	    case 2:
+	      return [[y, x - 1], [y + 1, x], [y + 1, x - 1], [y + 1, x + 1]];
+	    case 3:
+	      return [[y, x], [y - 1, x], [y + 1, x], [y - 1, x + 1]];
+	  }
+	}
+
+	function updateICells(p) {
+	  p.orient = p.orient % 2;
+	  var x = p.loc[1];
+	  var y = p.loc[0];
+
+	  if (p.orient == 0) {
+	    return [[y, x], [y, x - 1], [y, x + 1], [y, x + 2]];
+	  } else {
+	    return [[y, x + 1], [y - 1, x + 1], [y + 1, x + 1], [y + 2, x + 1]];
+	  }
+	}
+
+	exports.rotate = rotate;
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var generateDummy = function generateDummy() {
+	  return 3;
+	};
+
+	var generateTGM1 = function () {
+	  var history = [];
+
+	  return function () {
+	    var piece;
+	    if (history.length === 0) {
+	      var p = Math.floor(Math.random() * 4) + 3; //first piece can't be Z,S,O to prevent forced overhang
+	      history = [0, 0, 0, 0];
+	      piece = p;
+	    } else {
+	      var tries = 4;
+	      var p = -1;
+	      while (tries > 0) {
+	        p = Math.floor(Math.random() * 7);
+	        if (history.indexOf(p) === -1) tries = 0;else {
+	          tries -= 1;
+	        }
+	      }
+	      piece = p;
+	    }
+	    history.pop();
+	    history.unshift(piece);
+	    return piece;
+	  };
+	}();
+
+	exports.generateDummy = generateDummy;
+	exports.generateTGM1 = generateTGM1;
 
 /***/ }
 /******/ ]);
