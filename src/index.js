@@ -1,3 +1,3 @@
-import { createStore } from 'redux'
+import {store, rotateActionCreator} from './state.js'
 
-var store = createStore( () => {} )
+store.dispatch(rotateActionCreator('CCW'));

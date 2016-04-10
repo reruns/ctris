@@ -46,12 +46,62 @@
 
 	'use strict';
 
-	var _redux = __webpack_require__(1);
+	var _state = __webpack_require__(1);
 
-	var store = (0, _redux.createStore)(function () {});
+	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.rotateActionCreator = exports.store = undefined;
+
+	var _redux = __webpack_require__(2);
+
+	var _constants = __webpack_require__(14);
+
+	var btris = function btris() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? _constants.INITSTATE : arguments[0];
+	  var action = arguments[1];
+
+	  //if (state.nextPieceType === -1) {
+	  //state.nextPiece = BTris.generateTGM1();
+	  //   for(var i=0; i < 10; i++) {
+	  //     for(var j=0; j < 21; j++) {
+	  //       state.grid[i][j] = -1;
+	  //     }
+	  //   }
+	  //   return state;
+	  // }
+
+	  switch (action.type) {
+	    case 'ROTATE':
+	      //state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
+	      return state;
+	    default:
+	      return state;
+	  }
+	};
+
+	var store = (0, _redux.createStore)(btris);
+
+	var rotateActionCreator = function rotateActionCreator(dir) {
+	  return {
+	    type: 'ROTATE',
+	    dir: dir
+	  };
+	};
+
+	exports.store = store;
+	exports.rotateActionCreator = rotateActionCreator;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -59,27 +109,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-	var _createStore = __webpack_require__(3);
+	var _createStore = __webpack_require__(4);
 
 	var _createStore2 = _interopRequireDefault(_createStore);
 
-	var _combineReducers = __webpack_require__(8);
+	var _combineReducers = __webpack_require__(9);
 
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-	var _bindActionCreators = __webpack_require__(10);
+	var _bindActionCreators = __webpack_require__(11);
 
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-	var _applyMiddleware = __webpack_require__(11);
+	var _applyMiddleware = __webpack_require__(12);
 
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-	var _compose = __webpack_require__(12);
+	var _compose = __webpack_require__(13);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
-	var _warning = __webpack_require__(9);
+	var _warning = __webpack_require__(10);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -100,10 +150,10 @@
 	exports.bindActionCreators = _bindActionCreators2["default"];
 	exports.applyMiddleware = _applyMiddleware2["default"];
 	exports.compose = _compose2["default"];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -200,7 +250,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -209,7 +259,7 @@
 	exports.ActionTypes = undefined;
 	exports["default"] = createStore;
 
-	var _isPlainObject = __webpack_require__(4);
+	var _isPlainObject = __webpack_require__(5);
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
@@ -421,12 +471,12 @@
 	}
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(5),
-	    isHostObject = __webpack_require__(6),
-	    isObjectLike = __webpack_require__(7);
+	var getPrototype = __webpack_require__(6),
+	    isHostObject = __webpack_require__(7),
+	    isObjectLike = __webpack_require__(8);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -497,7 +547,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
@@ -518,7 +568,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/**
@@ -544,7 +594,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -579,7 +629,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -587,13 +637,13 @@
 	exports.__esModule = true;
 	exports["default"] = combineReducers;
 
-	var _createStore = __webpack_require__(3);
+	var _createStore = __webpack_require__(4);
 
-	var _isPlainObject = __webpack_require__(4);
+	var _isPlainObject = __webpack_require__(5);
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-	var _warning = __webpack_require__(9);
+	var _warning = __webpack_require__(10);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -709,10 +759,10 @@
 	    return hasChanged ? nextState : state;
 	  };
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -741,7 +791,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -797,7 +847,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -808,7 +858,7 @@
 
 	exports["default"] = applyMiddleware;
 
-	var _compose = __webpack_require__(12);
+	var _compose = __webpack_require__(13);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
@@ -860,7 +910,7 @@
 	}
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -896,6 +946,24 @@
 	    }, last.apply(undefined, arguments));
 	  };
 	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var INITSTATE = {
+	  score: 0,
+	  currentPiece: { type: -1, orient: 0, loc: 0, cells: [[]], das: { count: 0, dir: 'L' } },
+	  nextPieceType: -1,
+	  grid: [[]]
+	};
+
+	exports.INITSTATE = INITSTATE;
 
 /***/ }
 /******/ ]);
