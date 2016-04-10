@@ -2,6 +2,7 @@ const INITSTATE = {
   score: 0,
   currentPiece: {type: -1, orient: 0, loc: 0, cells: [[]]},
   das: {count: 0, dir: 'L'},
+  gravity: {count: 64, g: 1},
   nextPieceType: -1,
   grid: [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
          [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],

@@ -76,9 +76,7 @@ function updateCells(p) {
 
 function updateZCells(p) {
   p.orient = p.orient % 2
-
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   if (p.orient === 0) {
     return [[y,x],[y+1,x],[y+1,x+1],[y,x-1]]
@@ -89,9 +87,7 @@ function updateZCells(p) {
 
 function updateSCells(p) {
   p.orient = p.orient % 2
-
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   if (p.orient == 0) {
     return [[y,x],[y,x+1],[y+1,x],[y+1,x-1]]
@@ -102,16 +98,14 @@ function updateSCells(p) {
 
 function updateOCells(p) {
   p.orient = 0;
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   return [[y,x],[y,x+1],[y+1,x],[y+1,x+1]];
 }
 
 function updateTCells(p) {
   p.orient = p.orient % 4;
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   switch(p.orient) {
     case 0: return [[y,x], [y,x-1], [y,x+1], [y+1,x]];
@@ -123,8 +117,7 @@ function updateTCells(p) {
 
 function updateLCells(p) {
   p.orient = p.orient % 4;
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   switch(p.orient) {
     case 0: return [[y,x], [y,x+1], [y,x-1], [y+1,x-1]];
@@ -136,8 +129,7 @@ function updateLCells(p) {
 
 function updateJCells(p) {
   p.orient = p.orient % 4;
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   switch(p.orient) {
     case 0: return [[y, x], [y, x-1], [y, x+1], [y+1, x+1]];
@@ -149,8 +141,7 @@ function updateJCells(p) {
 
 function updateICells(p) {
   p.orient = p.orient % 2;
-  var x = p.loc[1];
-  var y = p.loc[0];
+  let [y,x] = p.loc;
 
   if (p.orient == 0) {
     return [[y,x],[y,x-1],[y,x+1],[y,x+2]];
