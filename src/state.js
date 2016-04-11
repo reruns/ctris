@@ -6,7 +6,7 @@ import { generateTGM1 } from './blockGenerators.js'
 var btris = function(state = INITSTATE, action) {
   //on the first frame only, generate the first piece
   if (state.nextPieceType === -1) {
-    state.nextPiece = BTris.generateTGM1();
+    state.nextPiece = generateTGM1();
     return state;
   }
 

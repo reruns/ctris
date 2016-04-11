@@ -1,56 +1,83 @@
-(function() {
-    var pressedKeys = {};
+var pressedKeys = {};
 
-    function setKey(event, status) {
-        var code = event.keyCode;
-        var key;
+function setKey(event, status) {
+    var code = event.keyCode;
+    var key;
 
-        switch(code) {
-        case 37:
-            key = 'A'; break;
-        case 39:
-            key = 'B'; break;
-        case 40:
-            key = 'C'; break;
-        case 65: //a
-            key = 'LEFT'; break;
-        case 68: //d
-            key = 'RIGHT'; break;
-        case 83: //s
-            key = 'DROP'; break;
-        case 87: //w
-            key = 'SONIC'; break; //sonic drop will remain unused for now.
-        default:
-            key = String.fromCharCode(code);
-        }
-
-        pressedKeys[key] = status;
+    switch(code) {
+    case 37:
+        key = 'A'; break;
+    case 40:
+        key = 'B'; break;
+    case 39:
+        key = 'C'; break;
+    case 65: //a
+        key = 'LEFT'; break;
+    case 68: //d
+        key = 'RIGHT'; break;
+    case 83: //s
+        key = 'DROP'; break;
+    case 87: //w
+        key = 'SONIC'; break; //sonic drop will remain unused for now.
+    default:
+        key = String.fromCharCode(code);
     }
 
-    document.addEventListener('keydown', function(e) {
-        setKey(e, true);
-    });
+    pressedKeys[key] = status;
+}
 
-    document.addEventListener('keyup', function(e) {
-        setKey(e, false);
-    });
+document.addEventListener('keydown', function(e) {
+    setKey(e, true);
+});
 
-    window.addEventListener('blur', function() {
-        pressedKeys = {};
-    });
+document.addEventListener('keyup', function(e) {
+    setKey(e, false);
+});
 
-    window.input = {
-        isDown: function(key) {
-            return pressedKeys[key.toUpperCase()];
-        },
-        reset: function() {
-          pressedKeys['A'] = false;
-          pressedKeys['B'] = false;
-          pressedKeys['C'] = false;
-          pressedKeys['LEFT'] = false;
-          pressedKeys['RIGHT'] = false;
-          pressedKeys['DROP'] = false;
-          pressedKeys['SONIC'] = false;
-        }
-    };
-})();
+window.addEventListener('blur', function() {
+    pressedKeys = {};
+});
+
+let input = {
+    isDown: function(key) {
+        return pressedKeys[key.toUpperCase()];
+    },
+    reset: function() {
+      pressedKeys['A'] = false;
+      pressedKeys['B'] = false;
+      pressedKeys['C'] = false;
+      pressedKeys['LEFT'] = false;
+      pressedKeys['RIGHT'] = false;
+      pressedKeys['DROP'] = false;
+      pressedKeys['SONIC'] = false;
+    }
+};
+
+let history = [];
+
+let handleInput = function() {
+  let direction = '';
+  if (input.isDown('LEFT')) {
+    direction = 'L'
+  } else if (input.isDown('RIGHT')) {
+    direction = 'R'
+  } else if (input.isDown('DROP')) {
+    direction = 'D'
+  }
+
+  let buttons = [];
+  ['A','B','C'].forEach((button)=> {
+    if(input.isDown(button))
+      buttons = buttons.concat(button);
+  });
+
+  let newButtons = buttons.filter((button) => {
+    return history.indexOf(button) === -1
+  });
+
+  let out = {direction: direction, buttons: buttons, newButtons: newButtons};
+  history = buttons;
+  return out;
+}
+
+export {handleInput}

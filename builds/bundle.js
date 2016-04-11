@@ -46,12 +46,45 @@
 
 	'use strict';
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _state = __webpack_require__(1);
 
-	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
-	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
-	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
-	_state.store.dispatch((0, _state.rotateActionCreator)('CCW'));
+	var _input = __webpack_require__(17);
+
+	var requestAnimFrame = function () {
+	  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+	    window.setTimeout(callback, 1000 / 60);
+	  };
+	}();
+
+	var lastTime = Date.now();
+	main();
+
+	function main() {
+	  var now = Date.now();
+	  var dt = (now - lastTime) / 1000.0;
+
+	  //update(dt);
+	  //render();
+	  (0, _input.handleInput)();
+	  lastTime = now;
+	  requestAnimFrame(main);
+	}
+
+	function update(dt) {
+	  gameTime += dt;
+
+	  var _handleInput = (0, _input.handleInput)();
+
+	  var _handleInput2 = _slicedToArray(_handleInput, 3);
+
+	  direction = _handleInput2[0];
+	  buttons = _handleInput2[1];
+	  newButtons = _handleInput2[2];
+
+	  state.dispatch(updateActionCreator({ direction: direction, button: button }));
+	}
 
 /***/ },
 /* 1 */
@@ -80,7 +113,7 @@
 
 	  //on the first frame only, generate the first piece
 	  if (state.nextPieceType === -1) {
-	    state.nextPiece = BTris.generateTGM1();
+	    state.nextPiece = (0, _blockGenerators.generateTGM1)();
 	    return state;
 	  }
 
@@ -1412,6 +1445,105 @@
 
 	exports.generateDummy = generateDummy;
 	exports.generateTGM1 = generateTGM1;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var pressedKeys = {};
+
+	function setKey(event, status) {
+	    var code = event.keyCode;
+	    var key;
+
+	    switch (code) {
+	        case 37:
+	            key = 'A';break;
+	        case 40:
+	            key = 'B';break;
+	        case 39:
+	            key = 'C';break;
+	        case 65:
+	            //a
+	            key = 'LEFT';break;
+	        case 68:
+	            //d
+	            key = 'RIGHT';break;
+	        case 83:
+	            //s
+	            key = 'DROP';break;
+	        case 87:
+	            //w
+	            key = 'SONIC';break; //sonic drop will remain unused for now.
+	        default:
+	            key = String.fromCharCode(code);
+	    }
+
+	    pressedKeys[key] = status;
+	}
+
+	document.addEventListener('keydown', function (e) {
+	    setKey(e, true);
+	});
+
+	document.addEventListener('keyup', function (e) {
+	    setKey(e, false);
+	});
+
+	window.addEventListener('blur', function () {
+	    pressedKeys = {};
+	});
+
+	var input = {
+	    isDown: function isDown(key) {
+	        return pressedKeys[key.toUpperCase()];
+	    },
+	    reset: function reset() {
+	        pressedKeys['A'] = false;
+	        pressedKeys['B'] = false;
+	        pressedKeys['C'] = false;
+	        pressedKeys['LEFT'] = false;
+	        pressedKeys['RIGHT'] = false;
+	        pressedKeys['DROP'] = false;
+	        pressedKeys['SONIC'] = false;
+	    }
+	};
+
+	var history = [];
+
+	var handleInput = function handleInput() {
+	    var direction = '';
+	    if (input.isDown('LEFT')) {
+	        direction = 'L';
+	    } else if (input.isDown('RIGHT')) {
+	        direction = 'R';
+	    } else if (input.isDown('DROP')) {
+	        direction = 'D';
+	    }
+
+	    var buttons = [];
+	    ['A', 'B', 'C'].forEach(function (button) {
+	        if (input.isDown(button)) buttons = buttons.concat(button);
+	    });
+
+	    var newButtons = buttons.filter(function (button) {
+	        return history.indexOf(button) === -1;
+	    });
+
+	    if (newButtons.length != 0) {
+	        console.log("PRESSED A BUTTN");
+	    }
+	    var out = { direction: direction, buttons: buttons, newButtons: newButtons };
+	    history = buttons;
+	    return out;
+	};
+
+	exports.handleInput = handleInput;
 
 /***/ }
 /******/ ]);
