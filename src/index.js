@@ -26,7 +26,6 @@ function main() {
 }
 
 function update(dt) {
-
   let controls = handleInput();
   //this weirdness is because we actually care about what buttons were pressed this frame
   //AND what buttons are being held, separately.

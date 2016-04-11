@@ -19,6 +19,10 @@ var btris = function(state = INITSTATE, action) {
       return state;
     //unfortunately, most of the other things are pretty entangled.
     case 'UPDATE':
+
+      //If we get desynced from 60fps we're screwed anyway, so this should be fine.
+      state.timer += (1/60)
+
       //we're between moves
       if (state.currentPiece.type === -1) {
           if (state.are === 0) {
@@ -89,7 +93,9 @@ var btris = function(state = INITSTATE, action) {
 
           //update score
           state.score += ((state.level + lines)/4 + state.soft) * lines * ((2*lines) - 1) * combo * bravo
+
           // advance the level
+          let plevel = state.level;
           if (lines > 0) {
             state.level += lines + 1;
           } else if (state.level % 100 != 99 && state.level != 998) {
@@ -99,7 +105,7 @@ var btris = function(state = INITSTATE, action) {
           // reset gravity + soft
           state.gravity = updateGravity(state.level)
           state.grade = updateGrade(state.score)
-          //state.canGM = updateGMStatus(state.level, state.grade, state.timer);
+          state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
           state.soft = 0;
         } else {
           state.currentPiece.lockDelay -= 1
@@ -118,19 +124,25 @@ var btris = function(state = INITSTATE, action) {
   }
 }
 
-var store = createStore(btris);
+let store = createStore(btris);
 
-var rotateActionCreator = function(dir) {
+let rotateActionCreator = function(dir) {
   return {
     type: 'ROTATE',
     dir: dir
   }
 }
 
-var updateActionCreator = function(controls) {
+let updateActionCreator = function(controls) {
   return {
     type: 'UPDATE',
     controls: controls
+  }
+}
+
+let cleanupActionCreator = function () {
+  return {
+    type: 'CLEANUP'
   }
 }
 
@@ -148,6 +160,12 @@ var updateGravity = function(level) {
 
 var updateGrade = function(score) {
   return _newVal(GRADES, score)
+}
+
+let updateGMQual = function(plevel, level, score, timer) {
+  !((plevel < 300 && level >= 300 && (score < 12000 || timer > 255)) ||
+  (plevel < 500 && level >= 500 && (score < 40000 || timer > 450)) ||
+  (level == 999 && (score < 126000 || timer > 810)))
 }
 
 export {store, rotateActionCreator}
