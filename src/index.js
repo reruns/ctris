@@ -19,15 +19,19 @@ function main() {
   var now = Date.now();
   var dt = (now - lastTime) / 1000.0;
 
-  //update(dt);
+  update(dt);
   //render();
   lastTime = now;
   requestAnimFrame(main);
 }
 
 function update(dt) {
-  gameTime += dt;
 
-  [direction, buttons, newButtons] = handleInput();
-  state.dispatch(updateActionCreator({direction: direction, button: button}));
+  let controls = handleInput();
+  //this weirdness is because we actually care about what buttons were pressed this frame
+  //AND what buttons are being held, separately.
+  if (controls.newButton !== '') {
+    store.dispatch(rotateActionCreator({dir: controls.newButton}));
+  }
+  store.dispatch(updateActionCreator(controls));
 }

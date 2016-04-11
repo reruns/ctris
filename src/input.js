@@ -75,7 +75,18 @@ let handleInput = function() {
     return history.indexOf(button) === -1
   });
 
-  let out = {direction: direction, buttons: buttons, newButtons: newButtons};
+  let button, newButton;
+  [button, newButton] = [buttons, newButtons].map((poll) => {
+    if (poll[0] == 'A' || poll[0] == 'C') {
+      return 'CCW'
+    } else if (poll[0] == 'B') {
+      return 'CW'
+    } else {
+      return ''
+    }
+  })
+
+  let out = {direction: direction, button: button, newButton: newButton};
   history = buttons;
   return out;
 }

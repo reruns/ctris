@@ -46,8 +46,6 @@
 
 	'use strict';
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _state = __webpack_require__(1);
 
 	var _input = __webpack_require__(17);
@@ -65,25 +63,21 @@
 	  var now = Date.now();
 	  var dt = (now - lastTime) / 1000.0;
 
-	  //update(dt);
+	  update(dt);
 	  //render();
-	  (0, _input.handleInput)();
 	  lastTime = now;
 	  requestAnimFrame(main);
 	}
 
 	function update(dt) {
-	  gameTime += dt;
 
-	  var _handleInput = (0, _input.handleInput)();
-
-	  var _handleInput2 = _slicedToArray(_handleInput, 3);
-
-	  direction = _handleInput2[0];
-	  buttons = _handleInput2[1];
-	  newButtons = _handleInput2[2];
-
-	  state.dispatch(updateActionCreator({ direction: direction, button: button }));
+	  var controls = (0, _input.handleInput)();
+	  //this weirdness is because we actually care about what buttons were pressed this frame
+	  //AND what buttons are being held, separately.
+	  if (controls.newButton !== '') {
+	    _state.store.dispatch((0, _state.rotateActionCreator)({ dir: controls.newButton }));
+	  }
+	  _state.store.dispatch(updateActionCreator(controls));
 	}
 
 /***/ },
@@ -1455,6 +1449,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var pressedKeys = {};
 
 	function setKey(event, status) {
@@ -1535,10 +1532,26 @@
 	        return history.indexOf(button) === -1;
 	    });
 
-	    if (newButtons.length != 0) {
-	        console.log("PRESSED A BUTTN");
-	    }
-	    var out = { direction: direction, buttons: buttons, newButtons: newButtons };
+	    var button = void 0,
+	        newButton = void 0;
+
+	    var _map = [buttons, newButtons].map(function (poll) {
+	        if (poll[0] == 'A' || poll[0] == 'C') {
+	            return 'CCW';
+	        } else if (poll[0] == 'B') {
+	            return 'CW';
+	        } else {
+	            return '';
+	        }
+	    });
+
+	    var _map2 = _slicedToArray(_map, 2);
+
+	    button = _map2[0];
+	    newButton = _map2[1];
+
+
+	    var out = { direction: direction, button: button, newButton: newButton };
 	    history = buttons;
 	    return out;
 	};
