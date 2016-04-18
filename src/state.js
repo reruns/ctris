@@ -168,4 +168,4 @@ let updateGMQual = function(plevel, level, score, timer) {
   (level == 999 && (score < 126000 || timer > 810)))
 }
 
-export {store, rotateActionCreator}
+export {store, rotateActionCreator, updateActionCreator, cleanupActionCreator}
