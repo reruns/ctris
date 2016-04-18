@@ -1,5 +1,8 @@
 import {store, rotateActionCreator} from './state.js'
 import {handleInput} from './input.js'
+import {Grid, Cell} from './components.js'
+import {Provider} from 'react-redux'
+
 
 var requestAnimFrame = (() => {
   return window.requestAnimationFrame  ||
@@ -20,7 +23,7 @@ function main() {
   var dt = (now - lastTime) / 1000.0;
 
   update(dt);
-  //render();
+  render();
   lastTime = now;
   requestAnimFrame(main);
 }
@@ -34,3 +37,12 @@ function update(dt) {
   }
   store.dispatch(updateActionCreator(controls));
 }
+
+// function render() {
+//   ReactDOM.render(
+//     <Provider store={store}>
+//       <Grid />
+//     </Provider>,
+//     document.getElementById('content');
+//   );
+// }
