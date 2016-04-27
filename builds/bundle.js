@@ -1638,26 +1638,43 @@
 	    var score = _getState.score;
 
 	    var cellNodes = [];
-	    for (var i = 0; i < 21; i++) {
+
+	    var _loop = function _loop(i) {
+	      var _loop2 = function _loop2(j) {
+	        cellNodes.push(function () {
+	          var data = { active: false, type: -1, neighbors: {} };
+	          //what goes in this square?
+	          data.type = grid[i][j];
+	          if (currentPiece.cells.includes([i, j])) {
+	            data.type = currentPiece.type + 100;
+	            data.active = true;
+	          }
+	          if (data.type != -1 && !data.active) {
+	            //in this case, we need neighbor information
+	            if (!!grid[i - 1][j] && grid[i - 1][j] != -1) data.neighbors.up = true;
+	            if (!!grid[i][j - 1] && grid[i][j - 1] != -1) data.neighbors.left = true;
+	            if (!!grid[i + 1][j] && grid[i + 1][j] != -1) data.neighbors.down = true;
+	            if (!!grid[i][j + 1] && grid[i][j + 1] != -1) data.neighbors.right = true;
+	          }
+
+	          return _react2.default.createElement(
+	            Cell,
+	            { active: data.active, type: data.type, neighbors: data.neighbors, key: String(i) + "-" + j },
+	            " "
+	          );
+	        }());
+	      };
+
 	      for (var j = 0; j < 10; j++) {
-	        var data = { active: false, type: -1, neighbors: {} };
-	        //what goes in this square?
-	        data.type = grid[i][j];
-	        if (currentPiece.cells.includes([i, j])) {
-	          data.type = currentPiece.type + 100;
-	          data.active = true;
-	        }
-	        if (data.type != -1 && !data.active) {
-	          //in this case, we need neighbor information
-	          if (!!grid[i - 1][j] && grid[i - 1][j] != -1) data.neighbors.up = true;
-	          if (!!grid[i][j - 1] && grid[i][j - 1] != -1) data.neighbors.left = true;
-	          if (!!grid[i + 1][j] && grid[i + 1][j] != -1) data.neighbors.down = true;
-	          if (!!grid[i][j + 1] && grid[i][j + 1] != -1) data.neighbors.right = true;
-	        }
-	        cellNodes.concat(_react2.default.createElement(Cell, { active: data.active, type: data.type, neighbors: data.neighbors }));
+	        _loop2(j);
 	      }
+	    };
+
+	    for (var i = 0; i < 21; i++) {
+	      _loop(i);
 	    }
 
+	    console.log(cellNodes);
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "grid" },
@@ -1666,10 +1683,11 @@
 	  }
 	});
 
-	var Cell = function Cell(props) {
-	  _react2.default.createElement("div", { className: "cell" });
-	};
-
+	var Cell = (0, _react.createClass)({
+	  render: function render() {
+	    return _react2.default.createElement("div", { className: "cell" });
+	  }
+	});
 	exports.Grid = Grid;
 	exports.Cell = Cell;
 
