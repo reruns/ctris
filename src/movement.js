@@ -198,6 +198,11 @@ function updateICells(p) {
   p.orient = p.orient % 2;
   let [y,x] = p.loc;
 
+  //prevent attempted floorkicking on the bottom.
+  if(p.orient === 1 && y >= 19) {
+    p.orient = 0;
+  }
+
   if (p.orient == 0) {
     return [[y,x],[y,x-1],[y,x+1],[y,x+2]];
   } else {

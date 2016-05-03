@@ -1422,6 +1422,11 @@
 	  var y = _p$loc7[0];
 	  var x = _p$loc7[1];
 
+	  //prevent attempted floorkicking on the bottom.
+
+	  if (p.orient === 1 && y >= 19) {
+	    p.orient = 0;
+	  }
 
 	  if (p.orient == 0) {
 	    return [[y, x], [y, x - 1], [y, x + 1], [y, x + 2]];
