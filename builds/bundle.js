@@ -1670,7 +1670,9 @@
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.unsubscribe();
 	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {},
 	  render: function render() {
+	    console.log(this.state);
 	    var store = this.context.store;
 	    var getState = store.getState;
 
@@ -1727,7 +1729,8 @@
 	        null,
 	        Math.floor(1 / dt),
 	        "fps"
-	      )
+	      ),
+	      cellNodes
 	    );
 	  }
 	});

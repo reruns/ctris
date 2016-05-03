@@ -1,5 +1,3 @@
-import React, { Component, PropTypes, createClass } from 'react';
-
 const Grid = createClass ({
   contextTypes: {
     store: PropTypes.object
@@ -10,6 +8,8 @@ const Grid = createClass ({
   },
   componentWillUnmount() {
     this.unsubscribe()
+  },
+  shouldComponentUpdate(nextProps, nextState) {
   },
   render() {
     const { store } = this.context;
@@ -53,14 +53,3 @@ const Grid = createClass ({
     )
   }
 })
-
-const Cell = createClass ({
-  render() {
-    let type = "cell type"+ this.props.type
-    return (
-      <div className={type}>
-      </div>
-    )
-  }
-})
-export { Grid, Cell}

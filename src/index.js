@@ -20,7 +20,7 @@ let lastTime = Date.now();
 
 render(
   <Provider store={store}>
-    <Grid />
+    <App />
   </Provider>,
   document.getElementById('content')
 );
