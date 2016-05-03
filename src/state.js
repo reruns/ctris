@@ -62,6 +62,7 @@ var btris = function(state = INITSTATE, action) {
 
       //Advancing the current piece and locking
       if (action.controls === "D") {
+        console.log("tryintadropdog");
         state.currentPiece.lockDelay = 0;
         state.gravity.count = state.gravity.internal;
         state.soft += 1;
