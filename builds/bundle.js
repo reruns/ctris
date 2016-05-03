@@ -144,7 +144,7 @@
 	      if (state.currentPiece.type === -1) {
 	        if (state.are === 0) {
 	          state.currentPiece.type = state.nextPieceType;
-	          state.currentPiece.loc = [16, 4];
+	          state.currentPiece.loc = [1, 4];
 	          state.currentPiece = (0, _movement.resolveIRS)(state.currentPiece, action.controls.button, state.grid);
 	          state.currentPiece.lockDelay = 30;
 	          state.nextPieceType = (0, _blockGenerators.generateTGM1)();
@@ -160,7 +160,8 @@
 
 	      //das and shifting
 	      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-	      if (state.are < 27 && state.are > 1 && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
+	      console.log(action.controls);
+	      if ((state.currentPiece != -1 || state.are < 27 && state.are > 1) && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
 	        if (state.das.dir === action.controls) {
 	          if (state.das.count == 0) {
 	            state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
@@ -169,7 +170,7 @@
 	          }
 	        } else {
 	          state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
-	          state.das.direction = direction;
+	          state.das.direction = action.controls.direction;
 	          state.das.count = 14;
 	        }
 	      }
@@ -227,6 +228,7 @@
 	            state.grade = updateGrade(state.score);
 	            state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
 	            state.soft = 0;
+	            state.are = 30;
 	            state.currentPiece.type = -1;
 	            state.currentPiece.cells = [];
 	          })();
@@ -271,7 +273,6 @@
 
 	function _newVal(table, key) {
 	  for (var i = 0; i < table.length; i++) {
-	    console.log(table[i][0]);
 	    if (key >= table[i][0]) {
 	      return table[i][1];
 	    }
@@ -1157,7 +1158,7 @@
 	       are: 0,
 	       level: 1,
 	       currentPiece: { type: -1, orient: 0, loc: [0, 0], lockDelay: 30, cells: [[]] },
-	       das: { count: 0, dir: 'L' },
+	       das: { count: 14, dir: 'L' },
 	       clearedLines: [],
 	       gravity: { count: 256, g: 1, internal: 4 },
 	       nextPieceType: -1,
@@ -1200,6 +1201,8 @@
 
 	  if (safePosition(p.cells, grid)) {
 	    return p;
+	  } else if (p.type == 6) {
+	    return piece;
 	  } else {
 	    p.loc[1] += 1;
 	    p = updateCells(p);

@@ -43,7 +43,8 @@ var btris = function(state = INITSTATE, action) {
 
       //das and shifting
       //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-      if (state.are < 27 && state.are > 1 && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
+      console.log(action.controls);
+      if ((state.currentPiece != -1 || (state.are < 27 && state.are > 1)) && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
         if (state.das.dir === action.controls) {
           if (state.das.count == 0) {
             state.currentPiece = shift(state.currentPiece, action.controls.direction, state.grid);
@@ -52,7 +53,7 @@ var btris = function(state = INITSTATE, action) {
           }
         } else {
           state.currentPiece = shift(state.currentPiece, action.controls.direction, state.grid);
-          state.das.direction = direction;
+          state.das.direction = action.controls.direction;
           state.das.count = 14
         }
       }
@@ -108,6 +109,7 @@ var btris = function(state = INITSTATE, action) {
           state.grade = updateGrade(state.score)
           state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
           state.soft = 0;
+          state.are = 30;
           state.currentPiece.type = -1;
           state.currentPiece.cells = [];
         } else {

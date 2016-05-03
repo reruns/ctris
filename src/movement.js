@@ -14,6 +14,8 @@ var rotate = function(piece, dir, grid) {
 
   if (safePosition(p.cells, grid)) {
     return p
+  } else if (p.type == 6){
+    return piece;
   } else {
     p.loc[1] += 1;
     p = updateCells(p);
