@@ -1,0 +1,48 @@
+div {
+    margin: none;
+    padding: none;
+}
+
+div.cell {
+  width: 19px;
+  height: 19px;
+  border: 1px solid black;
+  display: inline-block;
+  float: left;
+}
+
+div.grid {
+  width: 210px;
+}
+
+div.type-1 {
+  background: none;
+}
+
+div.type0{
+  background: purple;
+}
+
+div.type1{
+  background: green;
+}
+
+div.type2{
+  background: yellow;
+}
+
+div.type3{
+  background: cyan;
+}
+
+div.type4{
+  background: orange;
+}
+
+div.type5{
+  background: blue;
+}
+
+div.type6{
+  background: red;
+}

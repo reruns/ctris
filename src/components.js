@@ -41,8 +41,7 @@ const Grid = createClass ({
         })());
       }
     }
-
-    console.log(cellNodes);
+    
     return (
       <div className="grid">
         {cellNodes}
@@ -53,8 +52,9 @@ const Grid = createClass ({
 
 const Cell = createClass ({
   render() {
+    let type = "cell type"+ this.props.type
     return (
-      <div className="cell">
+      <div className={type}>
       </div>
     )
   }

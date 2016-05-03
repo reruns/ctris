@@ -1674,7 +1674,6 @@
 	      _loop(i);
 	    }
 
-	    console.log(cellNodes);
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "grid" },
@@ -1685,7 +1684,8 @@
 
 	var Cell = (0, _react.createClass)({
 	  render: function render() {
-	    return _react2.default.createElement("div", { className: "cell" });
+	    var type = "cell type" + this.props.type;
+	    return _react2.default.createElement("div", { className: type });
 	  }
 	});
 	exports.Grid = Grid;
