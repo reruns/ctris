@@ -14,7 +14,7 @@ const Grid = createClass ({
   render() {
     const { store } = this.context;
     const { getState } = store;
-    const { grid, currentPiece, timer, score } = getState();
+    const { grid, currentPiece, timer, score, dt } = getState();
     let cellNodes = []
     for (let i=0; i < 21; i++) {
       for (let j=0; j < 10; j++) {
@@ -47,7 +47,7 @@ const Grid = createClass ({
 
     return (
       <div className="grid">
-      <h1>{currentPiece.lockDelay}</h1>
+      <h1>{Math.floor(1 / dt)}fps</h1>
         {cellNodes}
       </div>
     )

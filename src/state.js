@@ -11,6 +11,9 @@ var btris = function(state = INITSTATE, action) {
   }
 
   switch (action.type) {
+    case 'dt':
+      state.dt = action.dt
+      return state;
     case 'ROTATE':
       state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
       return state;

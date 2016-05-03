@@ -28,8 +28,8 @@ render(
 main();
 
 function main() {
-  var now = Date.now();
-  var dt = (now - lastTime) / 1000.0;
+  let now = Date.now();
+  let dt = (now - lastTime) / 1000.0;
   update(dt);
   lastTime = now;
   requestAnimFrame(main);
@@ -39,6 +39,7 @@ function update(dt) {
   let controls = handleInput();
   //this weirdness is because we actually care about what buttons were pressed this frame
   //AND what buttons are being held, separately.
+  store.dispatch({type: "dt", dt: dt})
   if (controls.newButton !== '') {
     store.dispatch(rotateActionCreator(controls.newButton));
   }

@@ -90,6 +90,7 @@
 	  var controls = (0, _input.handleInput)();
 	  //this weirdness is because we actually care about what buttons were pressed this frame
 	  //AND what buttons are being held, separately.
+	  _state.store.dispatch({ type: "dt", dt: dt });
 	  if (controls.newButton !== '') {
 	    _state.store.dispatch((0, _state.rotateActionCreator)(controls.newButton));
 	  }
@@ -131,6 +132,9 @@
 	  }
 
 	  switch (action.type) {
+	    case 'dt':
+	      state.dt = action.dt;
+	      return state;
 	    case 'ROTATE':
 	      state.currentPiece = (0, _movement.rotate)(state.currentPiece, action.dir, state.grid);
 	      return state;
@@ -1676,6 +1680,7 @@
 	    var currentPiece = _getState.currentPiece;
 	    var timer = _getState.timer;
 	    var score = _getState.score;
+	    var dt = _getState.dt;
 
 	    var cellNodes = [];
 
@@ -1720,9 +1725,9 @@
 	      _react2.default.createElement(
 	        "h1",
 	        null,
-	        currentPiece.lockDelay
-	      ),
-	      cellNodes
+	        Math.floor(1 / dt),
+	        "fps"
+	      )
 	    );
 	  }
 	});
