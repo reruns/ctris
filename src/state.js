@@ -27,7 +27,7 @@ var btris = function(state = INITSTATE, action) {
       if (state.currentPiece.type === -1) {
           if (state.are === 0) {
             state.currentPiece.type = state.nextPieceType
-            state.currentPiece.loc = [4,1];
+            state.currentPiece.loc = [1,4];
             state.currentPiece = resolveIRS(state.currentPiece, action.controls.button, state.grid)
             state.nextPieceType = generateTGM1();
             if (state.orientation == -1) {

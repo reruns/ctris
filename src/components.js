@@ -22,11 +22,11 @@ const Grid = createClass ({
           let data = {active: false, type: -1, neighbors: {}};
           //what goes in this square?
           data.type = grid[i][j];
-          if (currentPiece.cells.indexOf([i,j]) != -1) { //TODO: this doesn't work for nested arrays
-            console.log("LIVE HIT");
+          currentPiece.cells.forEach((cell) => {
+            if(cell[0] === i && cell[1] === j)
             data.type = currentPiece.type + 100
             data.active = true
-          }
+          })
           if(data.type != -1 && !data.active) { //in this case, we need neighbor information
             if (!!grid[i-1][j] && grid[i-1][j] != -1)
               data.neighbors.up = true

@@ -144,7 +144,7 @@
 	      if (state.currentPiece.type === -1) {
 	        if (state.are === 0) {
 	          state.currentPiece.type = state.nextPieceType;
-	          state.currentPiece.loc = [4, 1];
+	          state.currentPiece.loc = [1, 4];
 	          state.currentPiece = (0, _movement.resolveIRS)(state.currentPiece, action.controls.button, state.grid);
 	          state.nextPieceType = (0, _blockGenerators.generateTGM1)();
 	          if (state.orientation == -1) {
@@ -1158,7 +1158,7 @@
 	       gravity: { count: 256, g: 1, internal: 4 },
 	       nextPieceType: -1,
 	       gameOver: false,
-	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [2, 2, -1, -1, -1, -1, -1, -1, -1, -1], [2, 2, -1, -1, -1, -1, -1, -1, -1, -1]]
+	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
 
 	var GRAVS = [[500, { count: 256, g: 20, internal: 256 }], [450, { count: 256, g: 3, internal: 256 }], [420, { count: 256, g: 4, internal: 256 }], [400, { count: 256, g: 5, internal: 256 }], [360, { count: 256, g: 4, internal: 256 }], [330, { count: 256, g: 3, internal: 256 }], [300, { count: 256, g: 2, internal: 256 }], [251, { count: 256, g: 1, internal: 256 }], [247, { count: 256, g: 1, internal: 192 }], [243, { count: 256, g: 1, internal: 160 }], [239, { count: 256, g: 1, internal: 128 }], [236, { count: 256, g: 1, internal: 128 }], [233, { count: 256, g: 1, internal: 96 }], [230, { count: 256, g: 1, internal: 64 }], [220, { count: 256, g: 1, internal: 32 }], [200, { count: 256, g: 1, internal: 4 }], [170, { count: 256, g: 1, internal: 144 }], [160, { count: 256, g: 1, internal: 128 }], [140, { count: 256, g: 1, internal: 112 }], [120, { count: 256, g: 1, internal: 96 }], [100, { count: 256, g: 1, internal: 80 }], [90, { count: 256, g: 1, internal: 64 }], [80, { count: 256, g: 1, internal: 48 }], [70, { count: 256, g: 1, internal: 32 }], [60, { count: 256, g: 1, internal: 16 }], [50, { count: 256, g: 1, internal: 12 }], [40, { count: 256, g: 1, internal: 10 }], [35, { count: 256, g: 1, internal: 8 }], [30, { count: 256, g: 1, internal: 6 }], [0, { count: 256, g: 1, internal: 4 }]];
@@ -1648,11 +1648,10 @@
 	          var data = { active: false, type: -1, neighbors: {} };
 	          //what goes in this square?
 	          data.type = grid[i][j];
-	          if (currentPiece.cells.indexOf([i, j]) != -1) {
-	            console.log("LIVE HIT");
-	            data.type = currentPiece.type + 100;
+	          currentPiece.cells.forEach(function (cell) {
+	            if (cell[0] === i && cell[1] === j) data.type = currentPiece.type + 100;
 	            data.active = true;
-	          }
+	          });
 	          if (data.type != -1 && !data.active) {
 	            //in this case, we need neighbor information
 	            if (!!grid[i - 1][j] && grid[i - 1][j] != -1) data.neighbors.up = true;
