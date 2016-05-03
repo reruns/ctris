@@ -128,7 +128,7 @@ var btris = function(state = INITSTATE, action) {
           } else {
             state.are = 30;
           }
-          
+
           state.gravity = updateGravity(state.level)
           state.grade = updateGrade(state.score)
           state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
@@ -142,6 +142,7 @@ var btris = function(state = INITSTATE, action) {
         state.gravity.count -= state.gravity.internal;
         if (state.gravity.count <= 0) {
           state.currentPiece = advance(state.currentPiece, state.gravity.g, state.grid)
+          state.currentPiece.lockDelay = 30;
           state.gravity.count += 256
         }
       }

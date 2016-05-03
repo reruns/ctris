@@ -47,6 +47,7 @@ const Grid = createClass ({
 
     return (
       <div className="grid">
+      <h1>{currentPiece.lockDelay}</h1>
         {cellNodes}
       </div>
     )

@@ -265,6 +265,7 @@
 	        state.gravity.count -= state.gravity.internal;
 	        if (state.gravity.count <= 0) {
 	          state.currentPiece = (0, _movement.advance)(state.currentPiece, state.gravity.g, state.grid);
+	          state.currentPiece.lockDelay = 30;
 	          state.gravity.count += 256;
 	        }
 	      }
@@ -1716,6 +1717,11 @@
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "grid" },
+	      _react2.default.createElement(
+	        "h1",
+	        null,
+	        currentPiece.lockDelay
+	      ),
 	      cellNodes
 	    );
 	  }
