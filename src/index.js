@@ -40,7 +40,7 @@ function update(dt) {
   //this weirdness is because we actually care about what buttons were pressed this frame
   //AND what buttons are being held, separately.
   if (controls.newButton !== '') {
-    store.dispatch(rotateActionCreator({dir: controls.newButton}));
+    store.dispatch(rotateActionCreator(controls.newButton));
   }
   store.dispatch(updateActionCreator(controls));
 }

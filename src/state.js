@@ -56,6 +56,7 @@ var btris = function(state = INITSTATE, action) {
           state.das.count = 14
         } else {
           state.das.count = 14;
+          state.das.dir = "X";
         }
       }
 
@@ -91,7 +92,7 @@ var btris = function(state = INITSTATE, action) {
 
           //if the line above the highest line we cleared is empty, the screen is clear
           let bravo = 1
-          if (lines != 0 && grid[state.clearedLines[0] - 1].every((cell) => {return cell == -1}))
+          if (lines != 0 && state.grid[state.clearedLines[0] - 1].every((cell) => {return cell == -1}))
             bravo = 4;
 
           //update score

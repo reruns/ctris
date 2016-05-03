@@ -91,7 +91,7 @@
 	  //this weirdness is because we actually care about what buttons were pressed this frame
 	  //AND what buttons are being held, separately.
 	  if (controls.newButton !== '') {
-	    _state.store.dispatch((0, _state.rotateActionCreator)({ dir: controls.newButton }));
+	    _state.store.dispatch((0, _state.rotateActionCreator)(controls.newButton));
 	  }
 	  _state.store.dispatch((0, _state.updateActionCreator)(controls));
 	}
@@ -173,6 +173,7 @@
 	          state.das.count = 14;
 	        } else {
 	          state.das.count = 14;
+	          state.das.dir = "X";
 	        }
 	      }
 
@@ -209,7 +210,7 @@
 
 	            //if the line above the highest line we cleared is empty, the screen is clear
 	            var bravo = 1;
-	            if (lines != 0 && grid[state.clearedLines[0] - 1].every(function (cell) {
+	            if (lines != 0 && state.grid[state.clearedLines[0] - 1].every(function (cell) {
 	              return cell == -1;
 	            })) bravo = 4;
 
@@ -1193,7 +1194,7 @@
 	  var p = {
 	    type: piece.type,
 	    loc: [piece.loc[0], piece.loc[1]],
-	    orient: piece.orient + (dir == 'CCW' ? 3 : 1),
+	    orient: piece.orient + (dir === 'CCW' ? 3 : 1),
 	    cells: [[]],
 	    lockDelay: piece.lockDelay
 	  };

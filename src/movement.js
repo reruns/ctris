@@ -5,7 +5,7 @@ var rotate = function(piece, dir, grid) {
   let p = {
     type: piece.type,
     loc: [piece.loc[0], piece.loc[1]],
-    orient: piece.orient + (dir == 'CCW' ? 3 : 1),
+    orient: piece.orient + (dir === 'CCW' ? 3 : 1),
     cells: [[]],
     lockDelay: piece.lockDelay
   }
