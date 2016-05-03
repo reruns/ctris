@@ -177,7 +177,7 @@
 	      }
 
 	      //Advancing the current piece and locking
-	      if (action.controls === "D") {
+	      if (action.controls.direction === "D") {
 	        state.currentPiece.lockDelay = 0;
 	        state.gravity.count = state.gravity.internal;
 	        state.soft += 1;
