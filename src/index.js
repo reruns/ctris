@@ -1,4 +1,4 @@
-import {store, rotateActionCreator, updateActionCreator} from './state.js'
+import {store, rotateActionCreator, updateActionCreator, cleanupActionCreator} from './state.js'
 import {handleInput} from './input.js'
 import {Grid, Cell} from './components.js'
 import {Provider} from 'react-redux'
@@ -41,6 +41,9 @@ function update(dt) {
   //AND what buttons are being held, separately.
   if (controls.newButton !== '') {
     store.dispatch(rotateActionCreator(controls.newButton));
+  }
+  if (store.getState().are == 31) {
+    store.dispatch(cleanupActionCreator());
   }
   store.dispatch(updateActionCreator(controls));
 }

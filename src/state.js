@@ -16,10 +16,26 @@ var btris = function(state = INITSTATE, action) {
       return state;
     //once the animation is done, we dispatch an action to actually remove the lines
     case 'CLEANUP':
+      let lines = state.clearedLines.sort().reverse();
+      let offset = 0;
+      for (let i = 20; i >= 0; i--) {
+        if (i == lines[0]) {
+          lines.shift();
+          offset += 1;
+        }
+        if (offset == 0) {
+          continue;
+        } else {
+          if (i-offset >= 0) {
+            state.grid[i] = state.grid[i-offset]
+          } else {
+            state.grid[i] = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+          }
+        }
+      }
       return state;
     //unfortunately, most of the other things are pretty entangled.
     case 'UPDATE':
-
       //If we get desynced from 60fps we're screwed anyway, so this should be fine.
       state.timer += (1/60)
 
@@ -107,11 +123,16 @@ var btris = function(state = INITSTATE, action) {
           }
 
           // reset gravity + soft
+          if (lines != 0) {
+            state.are = 41;
+          } else {
+            state.are = 30;
+          }
+          
           state.gravity = updateGravity(state.level)
           state.grade = updateGrade(state.score)
           state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
           state.soft = 0;
-          state.are = 30;
           state.currentPiece.type = -1;
           state.currentPiece.cells = [];
         } else {
