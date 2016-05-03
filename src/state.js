@@ -1,12 +1,12 @@
 import { createStore } from 'redux'
 import { INITSTATE, GRAVS, GRADES } from './constants.js'
-import { rotate, shift, resolveIRS, resting } from './movement.js'
+import { rotate, shift, resolveIRS, resting, advance } from './movement.js'
 import { generateTGM1 } from './blockGenerators.js'
 
 var btris = function(state = INITSTATE, action) {
   //on the first frame only, generate the first piece
   if (state.nextPieceType === -1) {
-    state.nextPiece = generateTGM1();
+    state.nextPieceType = generateTGM1();
     return state;
   }
 
@@ -28,7 +28,7 @@ var btris = function(state = INITSTATE, action) {
           if (state.are === 0) {
             state.currentPiece.type = state.nextPieceType
             state.currentPiece.loc = [4,1];
-            state.currentPiece = ResolveIRS(state.currentPiece, action.controls.button, state.grid)
+            state.currentPiece = resolveIRS(state.currentPiece, action.controls.button, state.grid)
             state.nextPieceType = generateTGM1();
             if (state.orientation == -1) {
               state.gameOver = true;
@@ -107,6 +107,7 @@ var btris = function(state = INITSTATE, action) {
           state.grade = updateGrade(state.score)
           state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
           state.soft = 0;
+          state.currentPiece.type = -1;
         } else {
           state.currentPiece.lockDelay -= 1
         }

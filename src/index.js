@@ -30,7 +30,6 @@ main();
 function main() {
   var now = Date.now();
   var dt = (now - lastTime) / 1000.0;
-
   update(dt);
   lastTime = now;
   requestAnimFrame(main);

@@ -95,13 +95,14 @@ var advance = function(piece, grav, grid) {
     if (resting(piece, grid))
       return piece
   }
+  return piece;
 }
 
 function safePosition(cells, grid) {
   //if the coordinate goes off the side, we'll compare with undefined
   //which still works, thankfully.
   for (var i = 0; i < 4; i++) {
-    if (grid[cells[i][0]][cells[i][1]] !== -1)
+    if (cells[i][0] >= 21 || grid[cells[i][0]][cells[i][1]] !== -1)
       return false
   }
   return true
@@ -204,4 +205,4 @@ function updateICells(p) {
   }
 }
 
-export { rotate, shift, resting, resolveIRS }
+export { rotate, shift, resting, resolveIRS, advance }

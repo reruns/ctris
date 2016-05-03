@@ -81,7 +81,6 @@
 	function main() {
 	  var now = Date.now();
 	  var dt = (now - lastTime) / 1000.0;
-
 	  update(dt);
 	  lastTime = now;
 	  requestAnimFrame(main);
@@ -124,7 +123,7 @@
 
 	  //on the first frame only, generate the first piece
 	  if (state.nextPieceType === -1) {
-	    state.nextPiece = (0, _blockGenerators.generateTGM1)();
+	    state.nextPieceType = (0, _blockGenerators.generateTGM1)();
 	    return state;
 	  }
 
@@ -146,7 +145,7 @@
 	        if (state.are === 0) {
 	          state.currentPiece.type = state.nextPieceType;
 	          state.currentPiece.loc = [4, 1];
-	          state.currentPiece = ResolveIRS(state.currentPiece, action.controls.button, state.grid);
+	          state.currentPiece = (0, _movement.resolveIRS)(state.currentPiece, action.controls.button, state.grid);
 	          state.nextPieceType = (0, _blockGenerators.generateTGM1)();
 	          if (state.orientation == -1) {
 	            state.gameOver = true;
@@ -227,6 +226,7 @@
 	            state.grade = updateGrade(state.score);
 	            state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
 	            state.soft = 0;
+	            state.currentPiece.type = -1;
 	          })();
 	        } else {
 	          state.currentPiece.lockDelay -= 1;
@@ -234,7 +234,7 @@
 	      } else {
 	        state.gravity.count -= state.gravity.internal;
 	        if (state.gravity.count <= 0) {
-	          state.currentPiece = advance(state.currentPiece, state.gravity.g, state.grid);
+	          state.currentPiece = (0, _movement.advance)(state.currentPiece, state.gravity.g, state.grid);
 	          state.gravity.count += 256;
 	        }
 	      }
@@ -1151,13 +1151,14 @@
 	var INITSTATE = {
 	       score: 0,
 	       soft: 0,
-	       currentPiece: { type: -1, orient: 0, loc: 0, lockDelay: 30, cells: [[]] },
+	       are: 0,
+	       currentPiece: { type: -1, orient: 0, loc: [0, 0], lockDelay: 30, cells: [[]] },
 	       das: { count: 0, dir: 'L' },
 	       clearedLines: [],
 	       gravity: { count: 256, g: 1, internal: 4 },
 	       nextPieceType: -1,
 	       gameOver: false,
-	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
+	       grid: [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [2, 2, -1, -1, -1, -1, -1, -1, -1, -1], [2, 2, -1, -1, -1, -1, -1, -1, -1, -1]]
 	};
 
 	var GRAVS = [[500, { count: 256, g: 20, internal: 256 }], [450, { count: 256, g: 3, internal: 256 }], [420, { count: 256, g: 4, internal: 256 }], [400, { count: 256, g: 5, internal: 256 }], [360, { count: 256, g: 4, internal: 256 }], [330, { count: 256, g: 3, internal: 256 }], [300, { count: 256, g: 2, internal: 256 }], [251, { count: 256, g: 1, internal: 256 }], [247, { count: 256, g: 1, internal: 192 }], [243, { count: 256, g: 1, internal: 160 }], [239, { count: 256, g: 1, internal: 128 }], [236, { count: 256, g: 1, internal: 128 }], [233, { count: 256, g: 1, internal: 96 }], [230, { count: 256, g: 1, internal: 64 }], [220, { count: 256, g: 1, internal: 32 }], [200, { count: 256, g: 1, internal: 4 }], [170, { count: 256, g: 1, internal: 144 }], [160, { count: 256, g: 1, internal: 128 }], [140, { count: 256, g: 1, internal: 112 }], [120, { count: 256, g: 1, internal: 96 }], [100, { count: 256, g: 1, internal: 80 }], [90, { count: 256, g: 1, internal: 64 }], [80, { count: 256, g: 1, internal: 48 }], [70, { count: 256, g: 1, internal: 32 }], [60, { count: 256, g: 1, internal: 16 }], [50, { count: 256, g: 1, internal: 12 }], [40, { count: 256, g: 1, internal: 10 }], [35, { count: 256, g: 1, internal: 8 }], [30, { count: 256, g: 1, internal: 6 }], [0, { count: 256, g: 1, internal: 4 }]];
@@ -1273,13 +1274,14 @@
 
 	    if (resting(piece, grid)) return piece;
 	  }
+	  return piece;
 	};
 
 	function safePosition(cells, grid) {
 	  //if the coordinate goes off the side, we'll compare with undefined
 	  //which still works, thankfully.
 	  for (var i = 0; i < 4; i++) {
-	    if (grid[cells[i][0]][cells[i][1]] !== -1) return false;
+	    if (cells[i][0] >= 21 || grid[cells[i][0]][cells[i][1]] !== -1) return false;
 	  }
 	  return true;
 	}
@@ -1432,6 +1434,7 @@
 	exports.shift = shift;
 	exports.resting = resting;
 	exports.resolveIRS = resolveIRS;
+	exports.advance = advance;
 
 /***/ },
 /* 16 */
@@ -1645,7 +1648,8 @@
 	          var data = { active: false, type: -1, neighbors: {} };
 	          //what goes in this square?
 	          data.type = grid[i][j];
-	          if (currentPiece.cells.includes([i, j])) {
+	          if (currentPiece.cells.indexOf([i, j]) != -1) {
+	            console.log("LIVE HIT");
 	            data.type = currentPiece.type + 100;
 	            data.active = true;
 	          }
@@ -1653,7 +1657,7 @@
 	            //in this case, we need neighbor information
 	            if (!!grid[i - 1][j] && grid[i - 1][j] != -1) data.neighbors.up = true;
 	            if (!!grid[i][j - 1] && grid[i][j - 1] != -1) data.neighbors.left = true;
-	            if (!!grid[i + 1][j] && grid[i + 1][j] != -1) data.neighbors.down = true;
+	            if (i >= 20) data.neighbors.down = false;else if (!!grid[i + 1][j] && grid[i + 1][j] != -1) data.neighbors.down = true;
 	            if (!!grid[i][j + 1] && grid[i][j + 1] != -1) data.neighbors.right = true;
 	          }
 

@@ -22,7 +22,8 @@ const Grid = createClass ({
           let data = {active: false, type: -1, neighbors: {}};
           //what goes in this square?
           data.type = grid[i][j];
-          if (currentPiece.cells.includes([i,j])) {
+          if (currentPiece.cells.indexOf([i,j]) != -1) { //TODO: this doesn't work for nested arrays
+            console.log("LIVE HIT");
             data.type = currentPiece.type + 100
             data.active = true
           }
@@ -31,7 +32,9 @@ const Grid = createClass ({
               data.neighbors.up = true
             if (!!grid[i][j-1] && grid[i][j-1] != -1)
               data.neighbors.left = true
-            if (!!grid[i+1][j] && grid[i+1][j] != -1)
+            if (i >= 20)
+              data.neighbors.down = false;
+            else if (!!grid[i+1][j] && grid[i+1][j] != -1)
               data.neighbors.down = true
             if (!!grid[i][j+1] && grid[i][j+1] != -1)
               data.neighbors.right = true
@@ -41,7 +44,7 @@ const Grid = createClass ({
         })());
       }
     }
-    
+
     return (
       <div className="grid">
         {cellNodes}
