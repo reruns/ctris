@@ -160,17 +160,18 @@
 
 	      //das and shifting
 	      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-	      console.log(action.controls);
-	      if ((state.currentPiece != -1 || state.are < 27 && state.are > 1) && (action.controls.direction == 'L' || action.controls.direction == 'R')) {
-	        if (state.das.dir === action.controls) {
+	      if (state.currentPiece != -1 || state.are < 27 && state.are > 1) {
+	        if (state.das.dir === action.controls.direction) {
 	          if (state.das.count == 0) {
 	            state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
 	          } else {
 	            state.das.count -= 1;
 	          }
-	        } else {
+	        } else if (action.controls.direction == "L" || action.controls.direction == "R") {
 	          state.currentPiece = (0, _movement.shift)(state.currentPiece, action.controls.direction, state.grid);
-	          state.das.direction = action.controls.direction;
+	          state.das.dir = action.controls.direction;
+	          state.das.count = 14;
+	        } else {
 	          state.das.count = 14;
 	        }
 	      }
