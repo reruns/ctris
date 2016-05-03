@@ -1205,11 +1205,11 @@
 	    return piece;
 	  } else {
 	    p.loc[1] += 1;
-	    p = updateCells(p);
+	    p.cells = updateCells(p);
 	    if (safePosition(p.cells, grid)) return p;
 
 	    p.loc[1] -= 2;
-	    p = updateCells(p);
+	    p.cells = updateCells(p);
 	    if (safePosition(p.cells, grid)) return p;
 
 	    return piece;
@@ -1240,7 +1240,7 @@
 
 	  if (safePosition(p.cells, grid)) {
 	    return p;
-	  } else if (safePosition(piece, grid)) {
+	  } else if (safePosition(piece.cells, grid)) {
 	    return piece;
 	  } else {
 	    piece.cells = updateCells(piece);
