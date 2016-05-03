@@ -144,8 +144,9 @@
 	      if (state.currentPiece.type === -1) {
 	        if (state.are === 0) {
 	          state.currentPiece.type = state.nextPieceType;
-	          state.currentPiece.loc = [1, 4];
+	          state.currentPiece.loc = [16, 4];
 	          state.currentPiece = (0, _movement.resolveIRS)(state.currentPiece, action.controls.button, state.grid);
+	          state.currentPiece.lockDelay = 30;
 	          state.nextPieceType = (0, _blockGenerators.generateTGM1)();
 	          if (state.orientation == -1) {
 	            state.gameOver = true;
@@ -191,17 +192,17 @@
 	              var x = _cell[1];
 
 	              if (rows.indexOf(y) === -1) rows = rows.concat(y);
-	              grid[y][x] = state.currentPiece.type;
+	              state.grid[y][x] = state.currentPiece.type;
 	            });
 
 	            // check for cleared lines
 	            rows.forEach(function (row) {
-	              if (grid[row].every(function (cell) {
+	              if (state.grid[row].every(function (cell) {
 	                return cell != -1;
 	              })) state.clearedLines = state.clearedLines.concat(row);
 	            });
 
-	            var lines = clearedLines.length;
+	            var lines = state.clearedLines.length;
 	            if (lines === 0) state.combo = 1;else state.combo = state.combo + 2 * lines - 2;
 
 	            //if the line above the highest line we cleared is empty, the screen is clear
@@ -211,7 +212,7 @@
 	            })) bravo = 4;
 
 	            //update score
-	            state.score += ((state.level + lines) / 4 + state.soft) * lines * (2 * lines - 1) * combo * bravo;
+	            state.score += ((state.level + lines) / 4 + state.soft) * lines * (2 * lines - 1) * state.combo * bravo;
 
 	            // advance the level
 	            var plevel = state.level;
@@ -227,6 +228,7 @@
 	            state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
 	            state.soft = 0;
 	            state.currentPiece.type = -1;
+	            state.currentPiece.cells = [];
 	          })();
 	        } else {
 	          state.currentPiece.lockDelay -= 1;
@@ -269,6 +271,7 @@
 
 	function _newVal(table, key) {
 	  for (var i = 0; i < table.length; i++) {
+	    console.log(table[i][0]);
 	    if (key >= table[i][0]) {
 	      return table[i][1];
 	    }
@@ -1152,6 +1155,7 @@
 	       score: 0,
 	       soft: 0,
 	       are: 0,
+	       level: 1,
 	       currentPiece: { type: -1, orient: 0, loc: [0, 0], lockDelay: 30, cells: [[]] },
 	       das: { count: 0, dir: 'L' },
 	       clearedLines: [],
@@ -1188,7 +1192,8 @@
 	    type: piece.type,
 	    loc: [piece.loc[0], piece.loc[1]],
 	    orient: piece.orient + (dir == 'CCW' ? 3 : 1),
-	    cells: [[]]
+	    cells: [[]],
+	    lockDelay: piece.lockDelay
 	  };
 
 	  p.cells = updateCells(p);
@@ -1214,7 +1219,8 @@
 	    type: piece.type,
 	    loc: [piece.loc[0], piece.loc[1]],
 	    orient: piece.orient,
-	    cells: [[]]
+	    cells: [[]],
+	    lockDelay: piece.lockDelay
 	  };
 
 	  switch (dir) {
@@ -1247,7 +1253,8 @@
 	    type: piece.type,
 	    loc: [piece.loc[0], piece.loc[1] + (dir === 'L' ? -1 : 1)],
 	    orient: piece.orient,
-	    cells: [[]]
+	    cells: [[]],
+	    lockDelay: piece.lockDelay
 	  };
 
 	  p.cells = updateCells(p);
@@ -1422,11 +1429,6 @@
 	  var y = _p$loc7[0];
 	  var x = _p$loc7[1];
 
-	  //prevent attempted floorkicking on the bottom.
-
-	  if (p.orient === 1 && y >= 19) {
-	    p.orient = 0;
-	  }
 
 	  if (p.orient == 0) {
 	    return [[y, x], [y, x - 1], [y, x + 1], [y, x + 2]];

@@ -6,7 +6,8 @@ var rotate = function(piece, dir, grid) {
     type: piece.type,
     loc: [piece.loc[0], piece.loc[1]],
     orient: piece.orient + (dir == 'CCW' ? 3 : 1),
-    cells: [[]]
+    cells: [[]],
+    lockDelay: piece.lockDelay
   }
 
   p.cells = updateCells(p);
@@ -34,7 +35,8 @@ var resolveIRS = function (piece, dir, grid) {
     type: piece.type,
     loc: [piece.loc[0], piece.loc[1]],
     orient: piece.orient,
-    cells: [[]]
+    cells: [[]],
+    lockDelay: piece.lockDelay
   }
 
   switch(dir) {
@@ -67,7 +69,8 @@ var shift = function(piece, dir, grid) {
     type: piece.type,
     loc: [piece.loc[0], piece.loc[1] + (dir === 'L' ? -1 : 1)],
     orient: piece.orient,
-    cells: [[]]
+    cells: [[]],
+    lockDelay: piece.lockDelay
   }
 
   p.cells = updateCells(p);
@@ -197,11 +200,6 @@ function updateJCells(p) {
 function updateICells(p) {
   p.orient = p.orient % 2;
   let [y,x] = p.loc;
-
-  //prevent attempted floorkicking on the bottom.
-  if(p.orient === 1 && y >= 19) {
-    p.orient = 0;
-  }
 
   if (p.orient == 0) {
     return [[y,x],[y,x-1],[y,x+1],[y,x+2]];

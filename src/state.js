@@ -28,7 +28,8 @@ var btris = function(state = INITSTATE, action) {
           if (state.are === 0) {
             state.currentPiece.type = state.nextPieceType
             state.currentPiece.loc = [1,4];
-            state.currentPiece = resolveIRS(state.currentPiece, action.controls.button, state.grid)
+            state.currentPiece = resolveIRS(state.currentPiece, action.controls.button, state.grid);
+            state.currentPiece.lockDelay = 30;
             state.nextPieceType = generateTGM1();
             if (state.orientation == -1) {
               state.gameOver = true;
@@ -71,16 +72,16 @@ var btris = function(state = INITSTATE, action) {
             let [y,x] = cell
             if (rows.indexOf(y) === -1)
               rows = rows.concat(y)
-            grid[y][x] = state.currentPiece.type;
+            state.grid[y][x] = state.currentPiece.type;
           })
 
           // check for cleared lines
           rows.forEach((row) => {
-            if ( grid[row].every( (cell) => {return cell != -1} ) )
+            if ( state.grid[row].every( (cell) => {return cell != -1} ) )
               state.clearedLines = state.clearedLines.concat(row)
           })
 
-          let lines = clearedLines.length
+          let lines = state.clearedLines.length
           if (lines === 0)
             state.combo = 1
           else
@@ -92,7 +93,7 @@ var btris = function(state = INITSTATE, action) {
             bravo = 4;
 
           //update score
-          state.score += ((state.level + lines)/4 + state.soft) * lines * ((2*lines) - 1) * combo * bravo
+          state.score += ((state.level + lines)/4 + state.soft) * lines * ((2*lines) - 1) * state.combo * bravo
 
           // advance the level
           let plevel = state.level;
@@ -108,6 +109,7 @@ var btris = function(state = INITSTATE, action) {
           state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
           state.soft = 0;
           state.currentPiece.type = -1;
+          state.currentPiece.cells = [];
         } else {
           state.currentPiece.lockDelay -= 1
         }

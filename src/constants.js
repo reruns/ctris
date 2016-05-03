@@ -2,6 +2,7 @@ const INITSTATE = {
   score: 0,
   soft: 0,
   are: 0,
+  level: 1,
   currentPiece: {type: -1, orient: 0, loc: [0,0], lockDelay: 30, cells: [[]]},
   das: {count: 0, dir: 'L'},
   clearedLines: [],
