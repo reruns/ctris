@@ -1,6 +1,7 @@
 import React, { createClass, PropTypes } from 'react';
 import Grid from './grid.js'
 import FrameCount from './frameCount.js'
+import {connect} from 'react-redux'
 
 const GameView = createClass ({
   contextTypes: {
@@ -14,14 +15,15 @@ const GameView = createClass ({
     this.unsubscribe()
   },
   render() {
-    const {store} = this.context;
-    const { getState } = store;
+    const { store } = this.context;
+    const { dt, grid, currentPiece } = store.getState();
     return (
       <div className="game">
-        <FrameCount />
+        <FrameCount/>
+        <Grid />
       </div>
     );
   }
 })
 
-export { GameView }
+export default GameView

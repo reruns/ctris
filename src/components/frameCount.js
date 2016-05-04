@@ -1,6 +1,7 @@
 import React, { createClass } from 'react';
 import {connect} from 'react-redux'
 
+
 function mapStateToProps(state) {
   return {
     dt: state.dt
@@ -14,4 +15,5 @@ const FrameCount = createClass ({
     )
   }
 })
+
 export default connect(mapStateToProps)(FrameCount)

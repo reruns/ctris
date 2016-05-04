@@ -12,7 +12,7 @@ function mapStateToProps(state) {
 
 const Grid = createClass ({
   render() {
-    const { grid, cells, type, dt } = this.props
+    const { grid, cells, type} = this.props
     let cellNodes = []
     for (let i=0; i < 21; i++) {
       for (let j=0; j < 10; j++) {
@@ -45,7 +45,6 @@ const Grid = createClass ({
 
     return (
       <div className="grid">
-      <div className={dt}></div>
         {cellNodes}
       </div>
     )
@@ -53,3 +52,4 @@ const Grid = createClass ({
 })
 
 export default connect(mapStateToProps)(Grid)
+// export default Grid

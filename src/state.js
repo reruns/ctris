@@ -4,22 +4,22 @@ import { rotate, shift, resolveIRS, resting, advance } from './movement.js'
 import { generateTGM1 } from './blockGenerators.js'
 
 var btris = function(state = INITSTATE, action) {
+  let newstate = JSON.parse(JSON.stringify(state))
   //on the first frame only, generate the first piece
   if (state.nextPieceType === -1) {
-    state.nextPieceType = generateTGM1();
-    return state;
+    newstate.nextPieceType = generateTGM1();
+    return newstate
   }
-
   switch (action.type) {
     case 'dt':
-      state.dt = action.dt
-      return state;
+      newstate.dt = action.dt
+      return newstate;
     case 'ROTATE':
-      state.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
-      return state;
+      newstate.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
+      return newstate;
     //once the animation is done, we dispatch an action to actually remove the lines
     case 'CLEANUP':
-      let lines = state.clearedLines.sort().reverse();
+      let lines = newstate.clearedLines.sort().reverse();
       let offset = 0;
       for (let i = 20; i >= 0; i--) {
         if (i == lines[0]) {
@@ -30,127 +30,127 @@ var btris = function(state = INITSTATE, action) {
           continue;
         } else {
           if (i-offset >= 0) {
-            state.grid[i] = state.grid[i-offset]
+            newstate.grid[i] = newstate.grid[i-offset]
           } else {
-            state.grid[i] = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+            newstate.grid[i] = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
           }
         }
       }
-      return state;
+      return newstate;
     //unfortunately, most of the other things are pretty entangled.
     case 'UPDATE':
       //If we get desynced from 60fps we're screwed anyway, so this should be fine.
-      state.timer += (1/60)
+      newstate.timer += (1/60)
 
       //we're between moves
-      if (state.currentPiece.type === -1) {
-          if (state.are === 0) {
-            state.currentPiece.type = state.nextPieceType
-            state.currentPiece.loc = [1,4];
-            state.currentPiece = resolveIRS(state.currentPiece, action.controls.button, state.grid);
-            state.currentPiece.lockDelay = 30;
-            state.nextPieceType = generateTGM1();
-            if (state.orientation == -1) {
-              state.gameOver = true;
-              return state;
+      if (newstate.currentPiece.type === -1) {
+          if (newstate.are === 0) {
+            newstate.currentPiece.type = newstate.nextPieceType
+            newstate.currentPiece.loc = [1,4];
+            newstate.currentPiece = resolveIRS(newstate.currentPiece, action.controls.button, newstate.grid);
+            newstate.currentPiece.lockDelay = 30;
+            newstate.nextPieceType = generateTGM1();
+            if (newstate.orientation == -1) {
+              newstate.gameOver = true;
+              return newstate;
             }
           } else {
-            state.are -= 1;
-            return state;
+            newstate.are -= 1;
+            return newstate;
           }
       }
 
       //das and shifting
       //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-      if ((state.currentPiece != -1 || (state.are < 27 && state.are > 1))) {
-        if (state.das.dir === action.controls.direction) {
-          if (state.das.count == 0) {
-            state.currentPiece = shift(state.currentPiece, action.controls.direction, state.grid);
+      if ((newstate.currentPiece != -1 || (newstate.are < 27 && newstate.are > 1))) {
+        if (newstate.das.dir === action.controls.direction) {
+          if (newstate.das.count == 0) {
+            newstate.currentPiece = shift(newstate.currentPiece, action.controls.direction, newstate.grid);
           } else {
-            state.das.count -= 1;
+            newstate.das.count -= 1;
           }
         } else if (action.controls.direction == "L" || action.controls.direction == "R"){
-          state.currentPiece = shift(state.currentPiece, action.controls.direction, state.grid);
-          state.das.dir = action.controls.direction;
-          state.das.count = 14
+          newstate.currentPiece = shift(newstate.currentPiece, action.controls.direction, newstate.grid);
+          newstate.das.dir = action.controls.direction;
+          newstate.das.count = 14
         } else {
-          state.das.count = 14;
-          state.das.dir = "X";
+          newstate.das.count = 14;
+          newstate.das.dir = "X";
         }
       }
 
 
       //Advancing the current piece and locking
       if (action.controls.direction === "D") {
-        state.currentPiece.lockDelay = 0;
-        state.gravity.count = state.gravity.internal;
-        state.soft += 1;
+        newstate.currentPiece.lockDelay = 0;
+        newstate.gravity.count = newstate.gravity.internal;
+        newstate.soft += 1;
       }
       //Is anything below us?
-      if (resting(state.currentPiece, state.grid)) {
-        if (state.currentPiece.lockDelay === 0) {
+      if (resting(newstate.currentPiece, newstate.grid)) {
+        if (newstate.currentPiece.lockDelay === 0) {
           let rows = []
-          state.currentPiece.cells.forEach( (cell) => {
+          newstate.currentPiece.cells.forEach( (cell) => {
             let [y,x] = cell
             if (rows.indexOf(y) === -1)
               rows = rows.concat(y)
-            state.grid[y][x] = state.currentPiece.type;
+            newstate.grid[y][x] = newstate.currentPiece.type;
           })
 
           // check for cleared lines
           rows.forEach((row) => {
-            if ( state.grid[row].every( (cell) => {return cell != -1} ) )
-              state.clearedLines = state.clearedLines.concat(row)
+            if ( newstate.grid[row].every( (cell) => {return cell != -1} ) )
+              newstate.clearedLines = newstate.clearedLines.concat(row)
           })
 
-          let lines = state.clearedLines.length
+          let lines = newstate.clearedLines.length
           if (lines === 0)
-            state.combo = 1
+            newstate.combo = 1
           else
-            state.combo = state.combo + (2 * lines) - 2
+            newstate.combo = newstate.combo + (2 * lines) - 2
 
           //if the line above the highest line we cleared is empty, the screen is clear
           let bravo = 1
-          if (lines != 0 && state.clearedLines[0] > 16 && state.grid[state.clearedLines[0] - 1].every((cell) => {return cell == -1}))
+          if (lines != 0 && newstate.clearedLines[0] > 16 && newstate.grid[newstate.clearedLines[0] - 1].every((cell) => {return cell == -1}))
             bravo = 4;
 
           //update score
-          state.score += ((state.level + lines)/4 + state.soft) * lines * ((2*lines) - 1) * state.combo * bravo
+          newstate.score += ((newstate.level + lines)/4 + newstate.soft) * lines * ((2*lines) - 1) * newstate.combo * bravo
 
           // advance the level
-          let plevel = state.level;
+          let plevel = newstate.level;
           if (lines > 0) {
-            state.level += lines + 1;
-          } else if (state.level % 100 != 99 && state.level != 998) {
-            state.level += 1
+            newstate.level += lines + 1;
+          } else if (newstate.level % 100 != 99 && newstate.level != 998) {
+            newstate.level += 1
           }
 
           // reset gravity + soft
           if (lines != 0) {
-            state.are = 41;
+            newstate.are = 41;
           } else {
-            state.are = 30;
+            newstate.are = 30;
           }
 
-          state.gravity = updateGravity(state.level)
-          state.grade = updateGrade(state.score)
-          state.canGM = state.canGM && updateGMQual(plevel, state.level, state.score, state.timer);
-          state.soft = 0;
-          state.currentPiece.type = -1;
-          state.currentPiece.cells = [];
+          newstate.gravity = updateGravity(newstate.level)
+          newstate.grade = updateGrade(newstate.score)
+          newstate.canGM = newstate.canGM && updateGMQual(plevel, newstate.level, newstate.score, newstate.timer);
+          newstate.soft = 0;
+          newstate.currentPiece.type = -1;
+          newstate.currentPiece.cells = [];
         } else {
-          state.currentPiece.lockDelay -= 1
+          newstate.currentPiece.lockDelay -= 1
         }
       } else {
-        state.gravity.count -= state.gravity.internal;
-        if (state.gravity.count <= 0) {
-          state.currentPiece = advance(state.currentPiece, state.gravity.g, state.grid)
-          state.currentPiece.lockDelay = 30;
-          state.gravity.count += 256
+        newstate.gravity.count -= state.gravity.internal;
+        if (newstate.gravity.count <= 0) {
+          newstate.currentPiece = advance(newstate.currentPiece, newstate.gravity.g, newstate.grid)
+          newstate.currentPiece.lockDelay = 30;
+          newstate.gravity.count += 256
         }
       }
 
-      return state;
+      return newstate;
     default:
       return state;
   }

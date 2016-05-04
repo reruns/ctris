@@ -1,6 +1,6 @@
 import {store, rotateActionCreator, updateActionCreator, cleanupActionCreator} from './state.js'
 import {handleInput} from './input.js'
-import { GameView } from './components/gameView.js'
+import GameView from './components/gameView.js'
 import {Provider} from 'react-redux'
 import React from 'react'
 import {render} from 'react-dom'
