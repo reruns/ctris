@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, createClass } from 'react';
+import React, { createClass } from 'react';
 
 const Cell = createClass ({
   render() {
@@ -9,4 +9,4 @@ const Cell = createClass ({
     )
   }
 })
-export { Grid, Cell}
+export { Cell }

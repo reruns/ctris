@@ -1,9 +1,10 @@
-h1 {
-  font-family: sans-serif;
-}
 div {
     margin: none;
     padding: none;
+}
+
+div.frameCounter {
+  font-family: sans-serif;
 }
 
 div.cell {

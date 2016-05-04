@@ -1,6 +1,6 @@
 import {store, rotateActionCreator, updateActionCreator, cleanupActionCreator} from './state.js'
 import {handleInput} from './input.js'
-import {Grid, Cell} from './components.js'
+import { GameView } from './components/gameView.js'
 import {Provider} from 'react-redux'
 import React from 'react'
 import {render} from 'react-dom'
@@ -20,7 +20,7 @@ let lastTime = Date.now();
 
 render(
   <Provider store={store}>
-    <App />
+    <GameView />
   </Provider>,
   document.getElementById('content')
 );

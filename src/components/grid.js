@@ -1,20 +1,18 @@
+import React, { createClass } from 'react';
+import {connect} from 'react-redux'
+import { Cell } from './cell.js'
+
+function mapStateToProps(state) {
+    return {
+      grid: state.grid,
+      cells: state.currentPiece.cells,
+      type: state.currentPiece.type
+    }
+}
+
 const Grid = createClass ({
-  contextTypes: {
-    store: PropTypes.object
-  },
-  componentDidMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe( () => this.forceUpdate() )
-  },
-  componentWillUnmount() {
-    this.unsubscribe()
-  },
-  shouldComponentUpdate(nextProps, nextState) {
-  },
   render() {
-    const { store } = this.context;
-    const { getState } = store;
-    const { grid, currentPiece, timer, score, dt } = getState();
+    const { grid, cells, type, dt } = this.props
     let cellNodes = []
     for (let i=0; i < 21; i++) {
       for (let j=0; j < 10; j++) {
@@ -22,9 +20,9 @@ const Grid = createClass ({
           let data = {active: false, type: -1, neighbors: {}};
           //what goes in this square?
           data.type = grid[i][j];
-          currentPiece.cells.forEach((cell) => {
+          cells.forEach((cell) => {
             if(cell[0] === i && cell[1] === j)
-            data.type = currentPiece.type + 100
+            data.type = type + 100
             data.active = true
           })
           if(data.type != -1 && !data.active) { //in this case, we need neighbor information
@@ -47,9 +45,11 @@ const Grid = createClass ({
 
     return (
       <div className="grid">
-      <h1>{Math.floor(1 / dt)}fps</h1>
+      <div className={dt}></div>
         {cellNodes}
       </div>
     )
   }
 })
+
+export default connect(mapStateToProps)(Grid)
