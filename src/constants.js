@@ -4,7 +4,7 @@ const INITSTATE = {
   are: 0,
   dt: (1/60),
   level: 1,
-  currentPiece: {type: -1, orient: 0, loc: [0,0], lockDelay: 30, cells: [[]]},
+  currentPiece: {type: -1, orient: 0, loc: [0,0], lockDelay: 30, cells: [[-1,-1],[-1,-1],[-1,-1],[-1,-1]]},
   das: {count: 14, dir: 'L'},
   clearedLines: [],
   gravity: {count: 256, g: 1, internal: 4},
