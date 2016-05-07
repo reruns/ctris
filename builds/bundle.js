@@ -144,18 +144,17 @@
 	    case 'CLEANUP':
 	      var lines = newstate.clearedLines.sort().reverse();
 	      var offset = 0;
-	      for (var i = 20; i >= 0; i--) {
+	      for (var i = 20; i >= 0 - lines.length; i--) {
 	        if (i == lines[0]) {
 	          lines.shift();
 	          offset += 1;
-	        }
-	        if (offset == 0) {
+	        } else if (offset == 0) {
 	          continue;
 	        } else {
-	          if (i - offset >= 0) {
-	            newstate.grid[i] = newstate.grid[i - offset];
+	          if (i >= 0) {
+	            newstate.grid[i + offset] = newstate.grid[i];
 	          } else {
-	            newstate.grid[i] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+	            newstate.grid[i + offset] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 	          }
 	        }
 	      }
@@ -5211,7 +5210,6 @@
 	    return false;
 	  },
 	  render: function render() {
-	    console.log("rendering grid");
 	    var _props2 = this.props;
 	    var grid = _props2.grid;
 	    var cells = _props2.cells;

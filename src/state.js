@@ -21,18 +21,17 @@ var btris = function(state = INITSTATE, action) {
     case 'CLEANUP':
       let lines = newstate.clearedLines.sort().reverse();
       let offset = 0;
-      for (let i = 20; i >= 0; i--) {
+      for (let i = 20; i >= 0-(lines.length); i--) {
         if (i == lines[0]) {
           lines.shift();
           offset += 1;
-        }
-        if (offset == 0) {
-          continue;
+        } else if (offset == 0) {
+          continue
         } else {
-          if (i-offset >= 0) {
-            newstate.grid[i] = newstate.grid[i-offset]
+          if (i >= 0) {
+            newstate.grid[i+offset] = newstate.grid[i]
           } else {
-            newstate.grid[i] = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+            newstate.grid[i+offset] = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
           }
         }
       }
