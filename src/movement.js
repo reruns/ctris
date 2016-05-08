@@ -115,6 +115,8 @@ function safePosition(cells, grid) {
 
 function updateCells(p) {
   switch (p.type) {
+    case -1:
+      return [];
     case 0:
       return updateZCells(p); //Z
     case 1:
@@ -210,4 +212,4 @@ function updateICells(p) {
   }
 }
 
-export { rotate, shift, resting, resolveIRS, advance }
+export { rotate, shift, resting, resolveIRS, advance, updateCells }

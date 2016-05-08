@@ -2,6 +2,7 @@ import React, { createClass } from 'react';
 
 const Cell = createClass ({
   shouldComponentUpdate(newProps) { //TODO update this for stack border
+    //also yes, I know.
     if (this.props.type == newProps.type) {
       return false
     } else {
