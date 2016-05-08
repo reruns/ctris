@@ -262,6 +262,7 @@
 	            newstate.soft = 0;
 	            newstate.currentPiece.type = -1;
 	            newstate.currentPiece.cells = [];
+	            newstate.currentPiece.orient = 0;
 	          })();
 	        } else {
 	          newstate.currentPiece.lockDelay -= 1;
@@ -1262,12 +1263,13 @@
 
 	  switch (dir) {
 	    case 'CCW':
-	      p.orient += 3;
+	      p.orient = 3;
 	      break;
 	    case 'CW':
-	      p.orient += 1;
+	      p.orient = 1;
 	      break;
 	    default:
+	      p.orient = 0;
 	      break;
 	  }
 	  p.cells = updateCells(p);

@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 const Grid = createClass ({
   shouldComponentUpdate(newProps) {
     const { grid, orient, loc} = this.props
-    for (let i=0; i < 21; i++) {
+    for (let i=1; i < 21; i++) {
       for (let j=0; j < 10; j++) {
         if (grid[i][j] != newProps.grid[i][j]) {
           return true

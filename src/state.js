@@ -137,6 +137,7 @@ var btris = function(state = INITSTATE, action) {
           newstate.soft = 0;
           newstate.currentPiece.type = -1;
           newstate.currentPiece.cells = [];
+          newstate.currentPiece.orient = 0;
         } else {
           newstate.currentPiece.lockDelay -= 1
         }

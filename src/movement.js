@@ -43,12 +43,14 @@ var resolveIRS = function (piece, dir, grid) {
 
   switch(dir) {
     case 'CCW':
-      p.orient += 3;
+      p.orient = 3;
       break;
     case 'CW':
-      p.orient += 1;
+      p.orient = 1;
       break;
-    default: break;
+    default:
+      p.orient = 0
+      break;
   }
   p.cells = updateCells(p);
 

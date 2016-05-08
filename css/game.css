@@ -7,6 +7,12 @@ div.frameCounter {
   font-family: sans-serif;
 }
 
+div.nextPiece {
+  width: 84px;
+  display: block;
+  float: left;
+}
+
 div.cell {
   width: 19px;
   height: 19px;
@@ -17,6 +23,7 @@ div.cell {
 
 div.grid {
   width: 210px;
+  display: inline-block;
 }
 
 div.type-1 {
