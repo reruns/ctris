@@ -1,4 +1,5 @@
 const INITSTATE = {
+  timer: 0,
   score: 0,
   soft: 0,
   are: 0,

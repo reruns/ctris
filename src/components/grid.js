@@ -1,7 +1,8 @@
 import React, { createClass } from 'react';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { Cell } from './cell.js'
 
+//TODO: Find out if this should be in a wrapper or something?
 function mapStateToProps(state) {
     return {
       grid: state.grid,

@@ -1,6 +1,7 @@
 import React, { createClass, PropTypes } from 'react';
 import Grid from './grid.js'
 import FrameCount from './frameCount.js'
+import Timer from './timer.js'
 import {connect} from 'react-redux'
 
 const GameView = createClass ({
@@ -21,6 +22,7 @@ const GameView = createClass ({
       <div className="game">
         <FrameCount/>
         <Grid />
+        <Timer />
       </div>
     );
   }
