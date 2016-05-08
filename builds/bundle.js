@@ -5883,6 +5883,14 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Cell = (0, _react.createClass)({
+	  shouldComponentUpdate: function shouldComponentUpdate(newProps) {
+	    //TODO update this for stack border
+	    if (this.props.type == newProps.type) {
+	      return false;
+	    } else {
+	      return true;
+	    }
+	  },
 	  render: function render() {
 	    var type = "cell type" + this.props.type;
 	    return _react2.default.createElement("div", { className: type });
