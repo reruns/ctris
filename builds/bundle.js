@@ -5212,7 +5212,7 @@
 	    var orient = _props.orient;
 	    var loc = _props.loc;
 
-	    for (var i = 0; i < 21; i++) {
+	    for (var i = 1; i < 21; i++) {
 	      for (var j = 0; j < 10; j++) {
 	        if (grid[i][j] != newProps.grid[i][j]) {
 	          return true;
