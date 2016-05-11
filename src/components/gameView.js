@@ -3,6 +3,10 @@ import Grid from './grid.js'
 import FrameCount from './frameCount.js'
 import Timer from './timer.js'
 import NextPiece from './nextPiece.js'
+import Score from './score.js'
+import Level from './level.js'
+import Grade from './grade.js'
+import LockDelayMeter from './lockDelayMeter.js'
 import {connect} from 'react-redux'
 
 const GameView = createClass ({
@@ -21,10 +25,17 @@ const GameView = createClass ({
     const { dt, grid, currentPiece } = store.getState();
     return (
       <div className="game">
-        <FrameCount/>
-        <NextPiece/>
-        <Grid />
-        <Timer />
+        <div className="leftPane">
+          <FrameCount/>
+          <Grade />
+          <Score />
+          <Level />
+        </div>
+        <div className="rightPane">
+          <NextPiece/>
+          <Grid />
+          <Timer />
+        </div>
       </div>
     );
   }

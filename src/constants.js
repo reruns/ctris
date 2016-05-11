@@ -1,6 +1,7 @@
 const INITSTATE = {
   timer: 0,
   score: 0,
+  grade: '9',
   soft: 0,
   are: 0,
   dt: (1/60),
