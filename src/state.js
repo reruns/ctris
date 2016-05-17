@@ -55,13 +55,12 @@ var btris = function(state = INITSTATE, action) {
             }
           } else {
             newstate.are -= 1;
-            return newstate;
           }
       }
 
       //das and shifting
       //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-      if ((newstate.currentPiece != -1 || (newstate.are < 27 && newstate.are > 1))) {
+      if ((newstate.currentPiece.type != -1 || (newstate.are < 27 && newstate.are > 1))) {
         if (newstate.das.dir === action.controls.direction) {
           if (newstate.das.count == 0) {
             newstate.currentPiece = shift(newstate.currentPiece, action.controls.direction, newstate.grid);
@@ -76,6 +75,10 @@ var btris = function(state = INITSTATE, action) {
           newstate.das.count = 14;
           newstate.das.dir = "X";
         }
+      }
+
+      if (newstate.currentPiece.type == -1) {
+        return newstate
       }
 
 

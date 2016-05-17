@@ -70,8 +70,9 @@ var resolveIRS = function (piece, dir, grid) {
 }
 
 var shift = function(piece, dir, grid) {
-  if (piece.type === -1)
-    return
+  if (piece.type === -1) {
+    return piece;
+  }
 
   let p = {
     type: piece.type,

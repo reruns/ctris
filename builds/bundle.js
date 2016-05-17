@@ -180,13 +180,12 @@
 	          }
 	        } else {
 	          newstate.are -= 1;
-	          return newstate;
 	        }
 	      }
 
 	      //das and shifting
 	      //n.b. "The player's DAS charge is unmodified during line clear delay, the first 4 frames of ARE, the last frame of ARE, and the frame on which a piece spawns.""
-	      if (newstate.currentPiece != -1 || newstate.are < 27 && newstate.are > 1) {
+	      if (newstate.currentPiece.type != -1 || newstate.are < 27 && newstate.are > 1) {
 	        if (newstate.das.dir === action.controls.direction) {
 	          if (newstate.das.count == 0) {
 	            newstate.currentPiece = (0, _movement.shift)(newstate.currentPiece, action.controls.direction, newstate.grid);
@@ -201,6 +200,10 @@
 	          newstate.das.count = 14;
 	          newstate.das.dir = "X";
 	        }
+	      }
+
+	      if (newstate.currentPiece.type == -1) {
+	        return newstate;
 	      }
 
 	      //Advancing the current piece and locking
@@ -1294,7 +1297,9 @@
 	};
 
 	var shift = function shift(piece, dir, grid) {
-	  if (piece.type === -1) return;
+	  if (piece.type === -1) {
+	    return piece;
+	  }
 
 	  var p = {
 	    type: piece.type,
@@ -1726,6 +1731,7 @@
 
 	    var gameOver = _store$getState.gameOver;
 	    var countdown = _store$getState.countdown;
+	    var das = _store$getState.das;
 
 	    var text = "";
 	    if (gameOver) {
@@ -1737,8 +1743,17 @@
 	      { className: 'game' },
 	      _react2.default.createElement(
 	        'div',
+	        { className: 'textOverlay' },
+	        text
+	      ),
+	      _react2.default.createElement(
+	        'div',
 	        { className: 'leftPane' },
-	        _react2.default.createElement(_frameCount2.default, null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          das.count
+	        ),
 	        _react2.default.createElement(_grade2.default, null),
 	        _react2.default.createElement(_score2.default, null),
 	        _react2.default.createElement(_level2.default, null)
@@ -1746,11 +1761,6 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'rightPane' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'textOverlay' },
-	          text
-	        ),
 	        _react2.default.createElement(_nextPiece2.default, null),
 	        _react2.default.createElement(_grid2.default, null),
 	        _react2.default.createElement(_timer2.default, null)
