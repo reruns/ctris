@@ -49,7 +49,7 @@ var btris = function(state = INITSTATE, action) {
             newstate.currentPiece = resolveIRS(newstate.currentPiece, action.controls.button, newstate.grid);
             newstate.currentPiece.lockDelay = 30;
             newstate.nextPieceType = generateTGM1();
-            if (newstate.orientation == -1) {
+            if (newstate.currentPiece.orient == -1) {
               newstate.gameOver = true;
               return newstate;
             }

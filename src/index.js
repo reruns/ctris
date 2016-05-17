@@ -32,7 +32,9 @@ function main() {
   let dt = (now - lastTime) / 1000.0;
   update(dt);
   lastTime = now;
-  requestAnimFrame(main);
+  if (!store.getState().gameOver){
+    requestAnimFrame(main);
+  }
 }
 
 function update(dt) {

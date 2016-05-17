@@ -11,6 +11,14 @@ div.leftPane {
   float: left;
 }
 
+div.textOverlay {
+  position: relative;
+  font-family: sans-serif;
+  font-size: 10px;
+  top: 300px;
+  left: 50px;
+}
+
 div.frameCounter {
   font-family: sans-serif;
 }

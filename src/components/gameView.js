@@ -22,7 +22,12 @@ const GameView = createClass ({
   },
   render() {
     const { store } = this.context;
-    const { dt, grid, currentPiece } = store.getState();
+    const { gameOver, countdown } = store.getState();
+    let text = "";
+    if (gameOver) {
+      text = "Game Over!"
+    }
+
     return (
       <div className="game">
         <div className="leftPane">
@@ -32,6 +37,7 @@ const GameView = createClass ({
           <Level />
         </div>
         <div className="rightPane">
+          <div className="textOverlay">{text}</div>
           <NextPiece/>
           <Grid />
           <Timer />

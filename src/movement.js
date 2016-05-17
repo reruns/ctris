@@ -56,12 +56,16 @@ var resolveIRS = function (piece, dir, grid) {
 
   if (safePosition(p.cells, grid)) {
     return p
-  } else if (safePosition(piece.cells, grid)) {
+  }
+
+  p.orient = 0;
+  p.cells = updateCells(p)
+
+  if (safePosition(p.cells, grid)) {
     return piece
   } else {
-    piece.cells = updateCells(piece);
-    piece.orient = -1;
-    return piece;
+    p.orient = -1;
+    return p;
   }
 }
 

@@ -85,7 +85,9 @@
 	  var dt = (now - lastTime) / 1000.0;
 	  update(dt);
 	  lastTime = now;
-	  requestAnimFrame(main);
+	  if (!_state.store.getState().gameOver) {
+	    requestAnimFrame(main);
+	  }
 	}
 
 	function update(dt) {
@@ -172,7 +174,7 @@
 	          newstate.currentPiece = (0, _movement.resolveIRS)(newstate.currentPiece, action.controls.button, newstate.grid);
 	          newstate.currentPiece.lockDelay = 30;
 	          newstate.nextPieceType = (0, _blockGenerators.generateTGM1)();
-	          if (newstate.orientation == -1) {
+	          if (newstate.currentPiece.orient == -1) {
 	            newstate.gameOver = true;
 	            return newstate;
 	          }
@@ -1193,6 +1195,7 @@
 	       are: 0,
 	       dt: 1 / 60,
 	       level: 1,
+	       countdown: 180,
 	       currentPiece: { type: -1, orient: 0, loc: [0, 0], lockDelay: 30, cells: [[-1, -1], [-1, -1], [-1, -1], [-1, -1]] },
 	       das: { count: 14, dir: 'L' },
 	       clearedLines: [],
@@ -1277,12 +1280,16 @@
 
 	  if (safePosition(p.cells, grid)) {
 	    return p;
-	  } else if (safePosition(piece.cells, grid)) {
+	  }
+
+	  p.orient = 0;
+	  p.cells = updateCells(p);
+
+	  if (safePosition(p.cells, grid)) {
 	    return piece;
 	  } else {
-	    piece.cells = updateCells(piece);
-	    piece.orient = -1;
-	    return piece;
+	    p.orient = -1;
+	    return p;
 	  }
 	};
 
@@ -1717,9 +1724,13 @@
 
 	    var _store$getState = store.getState();
 
-	    var dt = _store$getState.dt;
-	    var grid = _store$getState.grid;
-	    var currentPiece = _store$getState.currentPiece;
+	    var gameOver = _store$getState.gameOver;
+	    var countdown = _store$getState.countdown;
+
+	    var text = "";
+	    if (gameOver) {
+	      text = "Game Over!";
+	    }
 
 	    return _react2.default.createElement(
 	      'div',
@@ -1735,6 +1746,11 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'rightPane' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'textOverlay' },
+	          text
+	        ),
 	        _react2.default.createElement(_nextPiece2.default, null),
 	        _react2.default.createElement(_grid2.default, null),
 	        _react2.default.createElement(_timer2.default, null)
@@ -6007,7 +6023,7 @@
 	  strtime: function strtime() {
 	    var mins = String(Math.floor(this.props.timer / 60));
 	    var secs = String((this.props.timer % 60).toFixed(2));
-	    return mins + ":" + secs;
+	    if (this.props.timer % 60 < 10) return mins + ":0" + secs;else return mins + ":" + secs;
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
