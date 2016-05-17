@@ -22,7 +22,7 @@ const GameView = createClass ({
   },
   render() {
     const { store } = this.context;
-    const { gameOver, countdown, das} = store.getState();
+    const { gameOver, countdown} = store.getState();
     let text = "";
     if (gameOver) {
       text = "Game Over!"
@@ -32,7 +32,6 @@ const GameView = createClass ({
       <div className="game">
         <div className="textOverlay">{text}</div>
         <div className="leftPane">
-          <div>{das.count}</div>
           <Grade />
           <Score />
           <Level />

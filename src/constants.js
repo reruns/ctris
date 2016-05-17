@@ -1,7 +1,7 @@
 const INITSTATE = {
   timer: 0,
   score: 0,
-  grade: '9',
+  grade: {current: '9', next: '400'},
   soft: 0,
   are: 0,
   dt: (1/60),
@@ -69,23 +69,23 @@ const GRAVS =[
 [0,{count: 256, g: 1, internal: 4}]]
 
 const GRADES = [
-[120000,"S9"],
-[100000,"S8"],
-[82000,"S7"],
-[66000,"S6"],
-[52000,"S5"],
-[40000,"S4"],
-[30000,"S3"],
-[22000,"S2"],
-[16000, "S1"],
-[12000,"1"],
-[8000, "2"],
-[5500, "3"],
-[3500, "4"],
-[2000, "5"],
-[1400, "6"],
-[800, "7"],
-[400, "8"],
-[0,"9"]]
+[120000,{current: "S9", next:"??????"}],
+[100000,{current: "S8", next:"120000"}],
+[82000,{current: "S7", next:"100000"}],
+[66000,{current: "S6", next:"82000"}],
+[52000,{current: "S5", next: "66000"}],
+[40000,{current: "S4", next: "52000"}],
+[30000,{current: "S3", next: "40000"}],
+[22000,{current: "S2", next: "30000"}],
+[16000, {current: "S1", next: "22000"}],
+[12000,{current: "1", next: "16000"}],
+[8000, {current: "2", next: "12000"}],
+[5500, {current: "3", next: "8000"}],
+[3500, {current: "4", next: "5500"}],
+[2000, {current: "5", next: "3500"}],
+[1400, {current: "6", next: "2000" }],
+[800, {current: "7", next: "1400" }],
+[400, {current: "8", next: "800" }],
+[0,{current: "9", next: "400"}]]
 
 export { INITSTATE, GRAVS, GRADES }

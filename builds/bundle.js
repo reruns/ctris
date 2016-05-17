@@ -264,6 +264,13 @@
 	            newstate.gravity = updateGravity(newstate.level);
 	            newstate.grade = updateGrade(newstate.score);
 	            newstate.canGM = newstate.canGM && updateGMQual(plevel, newstate.level, newstate.score, newstate.timer);
+	            if (newstate.level >= 999) {
+	              newstate.level = 999;
+	              newstate.gameOver = true;
+	              if (newstate.canGM) {
+	                newstate.grade = { current: "Gm", next: "?????" };
+	              }
+	            }
 	            newstate.soft = 0;
 	            newstate.currentPiece.type = -1;
 	            newstate.currentPiece.cells = [];
@@ -1193,7 +1200,7 @@
 	var INITSTATE = {
 	       timer: 0,
 	       score: 0,
-	       grade: '9',
+	       grade: { current: '9', next: '400' },
 	       soft: 0,
 	       are: 0,
 	       dt: 1 / 60,
@@ -1210,7 +1217,7 @@
 
 	var GRAVS = [[500, { count: 256, g: 20, internal: 256 }], [450, { count: 256, g: 3, internal: 256 }], [420, { count: 256, g: 4, internal: 256 }], [400, { count: 256, g: 5, internal: 256 }], [360, { count: 256, g: 4, internal: 256 }], [330, { count: 256, g: 3, internal: 256 }], [300, { count: 256, g: 2, internal: 256 }], [251, { count: 256, g: 1, internal: 256 }], [247, { count: 256, g: 1, internal: 192 }], [243, { count: 256, g: 1, internal: 160 }], [239, { count: 256, g: 1, internal: 128 }], [236, { count: 256, g: 1, internal: 128 }], [233, { count: 256, g: 1, internal: 96 }], [230, { count: 256, g: 1, internal: 64 }], [220, { count: 256, g: 1, internal: 32 }], [200, { count: 256, g: 1, internal: 4 }], [170, { count: 256, g: 1, internal: 144 }], [160, { count: 256, g: 1, internal: 128 }], [140, { count: 256, g: 1, internal: 112 }], [120, { count: 256, g: 1, internal: 96 }], [100, { count: 256, g: 1, internal: 80 }], [90, { count: 256, g: 1, internal: 64 }], [80, { count: 256, g: 1, internal: 48 }], [70, { count: 256, g: 1, internal: 32 }], [60, { count: 256, g: 1, internal: 16 }], [50, { count: 256, g: 1, internal: 12 }], [40, { count: 256, g: 1, internal: 10 }], [35, { count: 256, g: 1, internal: 8 }], [30, { count: 256, g: 1, internal: 6 }], [0, { count: 256, g: 1, internal: 4 }]];
 
-	var GRADES = [[120000, "S9"], [100000, "S8"], [82000, "S7"], [66000, "S6"], [52000, "S5"], [40000, "S4"], [30000, "S3"], [22000, "S2"], [16000, "S1"], [12000, "1"], [8000, "2"], [5500, "3"], [3500, "4"], [2000, "5"], [1400, "6"], [800, "7"], [400, "8"], [0, "9"]];
+	var GRADES = [[120000, { current: "S9", next: "??????" }], [100000, { current: "S8", next: "120000" }], [82000, { current: "S7", next: "100000" }], [66000, { current: "S6", next: "82000" }], [52000, { current: "S5", next: "66000" }], [40000, { current: "S4", next: "52000" }], [30000, { current: "S3", next: "40000" }], [22000, { current: "S2", next: "30000" }], [16000, { current: "S1", next: "22000" }], [12000, { current: "1", next: "16000" }], [8000, { current: "2", next: "12000" }], [5500, { current: "3", next: "8000" }], [3500, { current: "4", next: "5500" }], [2000, { current: "5", next: "3500" }], [1400, { current: "6", next: "2000" }], [800, { current: "7", next: "1400" }], [400, { current: "8", next: "800" }], [0, { current: "9", next: "400" }]];
 
 	exports.INITSTATE = INITSTATE;
 	exports.GRAVS = GRAVS;
@@ -1731,7 +1738,6 @@
 
 	    var gameOver = _store$getState.gameOver;
 	    var countdown = _store$getState.countdown;
-	    var das = _store$getState.das;
 
 	    var text = "";
 	    if (gameOver) {
@@ -1749,11 +1755,6 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'leftPane' },
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          das.count
-	        ),
 	        _react2.default.createElement(_grade2.default, null),
 	        _react2.default.createElement(_score2.default, null),
 	        _react2.default.createElement(_level2.default, null)
@@ -6239,7 +6240,8 @@
 
 	function mapStateToProps(state) {
 	  return {
-	    grade: state.grade
+	    grade: state.grade.current,
+	    next: state.grade.next
 	  };
 	}
 
@@ -6251,7 +6253,26 @@
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'gradeView' },
-	      this.props.grade
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'grade' },
+	        this.props.grade
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'next' },
+	        'NEXT GRADE AT'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'amt' },
+	        this.props.next
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'pts' },
+	        'POINTS'
+	      )
 	    );
 	  }
 	});

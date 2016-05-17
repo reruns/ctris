@@ -137,6 +137,13 @@ var btris = function(state = INITSTATE, action) {
           newstate.gravity = updateGravity(newstate.level)
           newstate.grade = updateGrade(newstate.score)
           newstate.canGM = newstate.canGM && updateGMQual(plevel, newstate.level, newstate.score, newstate.timer);
+          if (newstate.level >= 999) {
+            newstate.level = 999;
+            newstate.gameOver = true;
+            if (newstate.canGM) {
+              newstate.grade = {current: "Gm", next: "?????"}
+            }
+          }
           newstate.soft = 0;
           newstate.currentPiece.type = -1;
           newstate.currentPiece.cells = [];

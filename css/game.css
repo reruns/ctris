@@ -17,13 +17,43 @@ div.rightPane {
 
 .game {
   width: 350px;
+  margin: auto;
 }
 
 div.leftPane {
   display: inline;
   float: left;
-  width: 50px;
+  width: 130px;
 }
+
+.gradeView {
+  padding-top: 65px;
+  font-size: 13px;
+  text-align: right;
+}
+
+.gradeView > div {
+  padding-top: 5px;
+  font-weight: 100;
+  display: block;
+}
+
+.grade {
+  margin-left: 40px;
+  padding: 10px;
+  float: right;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 50px;
+  border: 1px solid black;
+}
+
+.amt {
+  display: block;
+  font-size: 30px;
+}
+
 
 div.textOverlay {
   position: relative;
@@ -40,7 +70,7 @@ div.frameCounter {
 div.nextPiece {
   width: 84px;
   display: block;
-  margin: 10px auto;
+  margin: auto;
 }
 
 .nextCells {
@@ -52,6 +82,7 @@ div.grid {
   width: 206px;
   display: inline-block;
   border: 3px solid grey;
+  margin-top: 5px;
 }
 
 div.cell {
