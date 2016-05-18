@@ -118,7 +118,7 @@ var btris = function(state = INITSTATE, action) {
           }
 
           //update score
-          newstate.score += ((newstate.level + lines)/4 + newstate.soft) * lines * ((2*lines) - 1) * newstate.combo * bravo
+          newstate.score += (Math.ceil((newstate.level + lines)/4) + newstate.soft) * lines * newstate.combo * bravo
 
           // advance the level
           let plevel = newstate.level;
