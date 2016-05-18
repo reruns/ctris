@@ -6116,7 +6116,7 @@
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'nextPiece' },
-	      'Next',
+	      'NEXT',
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'nextCells' },
