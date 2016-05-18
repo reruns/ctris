@@ -75,13 +75,19 @@ div.leftPane {
   float: right;
 }
 
+.overlayContainer {
+  position: relative;
+  height: 0;
+  width: 0;
+}
+
 div.textOverlay {
   position: absolute;
   color: #ddd;
   font-family: sans-serif;
   font-size: 50px;
-  top: 250px;
-  margin-left: auto;
+  top: 200px;
+  left: 40px;
   text-shadow: 1px 1px 0 #000,
     -1px 1px 0 #000,
     1px -1px 0 #000,
@@ -128,6 +134,9 @@ div.grid {
   display: inline-block;
   border: 3px solid grey;
   margin-top: 5px;
+  background: -moz-linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7));
+  background: -webkit-linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7));
+  background: linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7));
 }
 
 div.cell {

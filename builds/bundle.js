@@ -1751,11 +1751,6 @@
 	      { className: 'game' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'textOverlay' },
-	        text
-	      ),
-	      _react2.default.createElement(
-	        'div',
 	        { className: 'leftPane' },
 	        _react2.default.createElement(_grade2.default, null),
 	        _react2.default.createElement(_score2.default, null),
@@ -1764,6 +1759,15 @@
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'rightPane' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'overlayContainer' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'textOverlay' },
+	            text
+	          )
+	        ),
 	        _react2.default.createElement(_nextPiece2.default, null),
 	        _react2.default.createElement(_grid2.default, null),
 	        _react2.default.createElement(_timer2.default, null)

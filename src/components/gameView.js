@@ -30,13 +30,13 @@ const GameView = createClass ({
 
     return (
       <div className="game">
-        <div className="textOverlay">{text}</div>
         <div className="leftPane">
           <Grade />
           <Score />
           <Level />
         </div>
         <div className="rightPane">
+          <div className="overlayContainer"><div className="textOverlay">{text}</div></div>
           <NextPiece/>
           <Grid />
           <Timer />
