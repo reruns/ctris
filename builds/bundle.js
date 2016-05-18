@@ -241,7 +241,9 @@
 	            var bravo = 1;
 	            if (lines != 0 && newstate.clearedLines[0] > 16 && newstate.grid[newstate.clearedLines[0] - 1].every(function (cell) {
 	              return cell == -1;
-	            })) bravo = 4;
+	            })) {
+	              bravo = 4;
+	            }
 
 	            //update score
 	            newstate.score += ((newstate.level + lines) / 4 + newstate.soft) * lines * (2 * lines - 1) * newstate.combo * bravo;
@@ -5320,7 +5322,7 @@
 	      }
 	    };
 
-	    for (var i = 0; i < 21; i++) {
+	    for (var i = 1; i < 21; i++) {
 	      _loop(i);
 	    }
 

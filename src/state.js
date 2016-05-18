@@ -113,8 +113,9 @@ var btris = function(state = INITSTATE, action) {
 
           //if the line above the highest line we cleared is empty, the screen is clear
           let bravo = 1
-          if (lines != 0 && newstate.clearedLines[0] > 16 && newstate.grid[newstate.clearedLines[0] - 1].every((cell) => {return cell == -1}))
+          if (lines != 0 && newstate.clearedLines[0] > 16 && newstate.grid[newstate.clearedLines[0] - 1].every((cell) => {return cell == -1})) {
             bravo = 4;
+          }
 
           //update score
           newstate.score += ((newstate.level + lines)/4 + newstate.soft) * lines * ((2*lines) - 1) * newstate.combo * bravo

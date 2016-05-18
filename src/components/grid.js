@@ -33,7 +33,7 @@ const Grid = createClass ({
   render() {
     const { grid, cells, type} = this.props
     let cellNodes = []
-    for (let i=0; i < 21; i++) {
+    for (let i=1; i < 21; i++) {
       for (let j=0; j < 10; j++) {
         cellNodes.push((() => {
           let data = {active: false, type: -1, neighbors: {}};
