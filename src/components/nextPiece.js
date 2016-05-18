@@ -31,7 +31,7 @@ const NextPiece = createClass({
     }
     return(
       <div className="nextPiece">
-        Next
+        NEXT
         <div className="nextCells">
           { cellNodes }
         </div>

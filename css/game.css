@@ -10,6 +10,16 @@ body {
   color: white;
 }
 
+.info {
+  display: inline-block;
+  vertical-align: top;
+  text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+}
+
+a {
+  color: cyan;
+}
+
 div.rightPane {
   display: inline;
   float: right;
@@ -21,9 +31,14 @@ div.rightPane {
   content: "";
 }
 
+#content {
+  display: inline-block;
+}
+
 .game {
   width: 350px;
   margin: auto;
+  display: inline-block;
 }
 
 div.leftPane {
@@ -35,7 +50,7 @@ div.leftPane {
 }
 
 .gradeView {
-  padding-top: 65px;
+  padding-top: 67px;
 }
 
 .gradeView > div {
@@ -47,10 +62,10 @@ div.leftPane {
 .grade {
   margin-left: 40px;
   margin-bottom: 5px;
-  padding: 10px;
+  padding: 8px;
   float: right;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   text-align: center;
   font-size: 50px;
   border: 2px solid white;
@@ -65,7 +80,7 @@ div.leftPane {
 }
 
 .levelView {
-  padding-top: 55px;
+  padding-top: 51px;
 }
 
 .divider {
@@ -128,6 +143,7 @@ div.nextPiece {
   width: 84px;
   display: block;
   margin: auto;
+  text-align: center;
 }
 
 .nextCells {
