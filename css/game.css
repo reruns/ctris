@@ -89,7 +89,7 @@ div.leftPane {
 
 div.textOverlay {
   position: absolute;
-  color: #ddd;
+  color: white;
   font-family: sans-serif;
   font-size: 50px;
   top: 200px;
