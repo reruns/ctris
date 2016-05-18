@@ -24,12 +24,12 @@ div.leftPane {
   display: inline;
   float: left;
   width: 130px;
+  font-size: 13px;
+  text-align: right;
 }
 
 .gradeView {
   padding-top: 65px;
-  font-size: 13px;
-  text-align: right;
 }
 
 .gradeView > div {
@@ -40,20 +40,40 @@ div.leftPane {
 
 .grade {
   margin-left: 40px;
+  margin-bottom: 5px;
   padding: 10px;
   float: right;
   width: 50px;
   height: 50px;
   text-align: center;
   font-size: 50px;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 
 .amt {
-  display: block;
   font-size: 30px;
 }
 
+.scoreView {
+  padding-top: 100px;
+}
+
+.levelView {
+  padding-top: 55px;
+}
+
+.divider {
+  border-bottom: 1px solid grey;
+  width: 50px;
+  height: 1px;
+  float: right;
+}
+
+.levelTier {
+  width: 120px;
+  text-align: right;
+  float: right;
+}
 
 div.textOverlay {
   position: relative;

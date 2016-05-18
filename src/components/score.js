@@ -14,7 +14,8 @@ const Score = createClass({
   render() {
     return(
       <div className="scoreView">
-        { this.props.score }
+        <div className="pts">POINTS</div>
+        <div className="amt">{ this.props.score }</div>
       </div>
     )
   }

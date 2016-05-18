@@ -6154,7 +6154,16 @@
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'scoreView' },
-	      this.props.score
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'pts' },
+	        'POINTS'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'amt' },
+	        this.props.score
+	      )
 	    );
 	  }
 	});
@@ -6201,17 +6210,18 @@
 	      { className: 'levelView' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'currentLevel' },
+	        { className: 'lvl' },
+	        'LEVEL'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'currentLevel amt' },
 	        this.props.level
 	      ),
+	      _react2.default.createElement('div', { className: 'divider' }),
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'divider' },
-	        '/'
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'levelTier' },
+	        { className: 'levelTier amt' },
 	        tier
 	      )
 	    );

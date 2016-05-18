@@ -20,9 +20,10 @@ const Level = createClass({
     }
     return(
       <div className="levelView">
-        <div className="currentLevel">{this.props.level}</div>
-        <div className="divider">/</div>
-        <div className="levelTier">{tier}</div>
+        <div className="lvl">LEVEL</div>
+        <div className="currentLevel amt">{this.props.level}</div>
+        <div className="divider"></div>
+        <div className="levelTier amt">{tier}</div>
       </div>
     )
   }
