@@ -4,6 +4,12 @@ div {
     font-family: sans-serif;
 }
 
+body {
+  background-image: url('../assets/background.jpg');
+  background-position: -10px;
+  color: white;
+}
+
 div.rightPane {
   display: inline;
   float: right;
@@ -47,7 +53,7 @@ div.leftPane {
   height: 50px;
   text-align: center;
   font-size: 50px;
-  border: 2px solid black;
+  border: 2px solid white;
 }
 
 .amt {
@@ -142,7 +148,7 @@ div.grid {
 div.cell {
   width: 19px;
   height: 19px;
-  border: 1px solid black;
+  border: 1px solid transparent;
   display: inline-block;
   float: left;
 }
