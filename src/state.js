@@ -3,7 +3,7 @@ import { INITSTATE, GRAVS, GRADES } from './constants.js'
 import { rotate, shift, resolveIRS, resting, advance } from './movement.js'
 import { generateTGM1 } from './blockGenerators.js'
 
-var btris = function(state = INITSTATE, action) {
+var ctris = function(state = INITSTATE, action) {
   let newstate = JSON.parse(JSON.stringify(state))
   //on the first frame only, generate the first piece
   if (state.nextPieceType === -1) {
@@ -167,7 +167,7 @@ var btris = function(state = INITSTATE, action) {
   }
 }
 
-let store = createStore(btris);
+let store = createStore(ctris);
 
 let rotateActionCreator = function(dir) {
   return {

@@ -125,7 +125,7 @@
 
 	var _blockGenerators = __webpack_require__(16);
 
-	var btris = function btris() {
+	var ctris = function ctris() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? _constants.INITSTATE : arguments[0];
 	  var action = arguments[1];
 
@@ -296,7 +296,7 @@
 	  }
 	};
 
-	var store = (0, _redux.createStore)(btris);
+	var store = (0, _redux.createStore)(ctris);
 
 	var rotateActionCreator = function rotateActionCreator(dir) {
 	  return {
