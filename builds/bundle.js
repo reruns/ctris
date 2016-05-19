@@ -144,7 +144,9 @@
 	      return newstate;
 	    //once the animation is done, we dispatch an action to actually remove the lines
 	    case 'CLEANUP':
-	      var lines = newstate.clearedLines.sort().reverse();
+	      var lines = newstate.clearedLines.sort(function (a, b) {
+	        return a - b;
+	      }).reverse();
 	      var offset = 0;
 	      for (var i = 20; i >= 0 - lines.length; i--) {
 	        if (i == lines[0]) {

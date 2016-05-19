@@ -19,7 +19,7 @@ var ctris = function(state = INITSTATE, action) {
       return newstate;
     //once the animation is done, we dispatch an action to actually remove the lines
     case 'CLEANUP':
-      let lines = newstate.clearedLines.sort().reverse();
+      let lines = newstate.clearedLines.sort((a,b)=>{return a-b}).reverse();
       let offset = 0;
       for (let i = 20; i >= 0-(lines.length); i--) {
         if (i == lines[0]) {
