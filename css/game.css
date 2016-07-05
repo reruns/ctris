@@ -152,7 +152,7 @@ div.nextPiece {
 }
 
 div.grid {
-  width: 206px;
+  width: 210px;
   display: inline-block;
   border: 3px solid grey;
   margin-top: 5px;
