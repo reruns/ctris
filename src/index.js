@@ -42,13 +42,7 @@ function main() {
       const {games} = res
       if (!!games) {
         let gs = JSON.parse(games);
-        let out = []
-        gs.forEach((game) =>{
-          let { initials, grade, time, score } = game;
-          let str = sprintf("%3s  %2s  %8s  %6i", initials, grade, time, score)
-          out.push(str)
-        });
-        setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: out}))}, 3000);
+        setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: gs}))}, 3000);
       }
     })
     .catch((res) => {

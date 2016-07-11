@@ -132,7 +132,7 @@ div.leftPane {
   white-space: pre-wrap;
   position: absolute;
   top: 80px;
-  font-size: 15px;
+  font-size: 14px;
   left: 0px;
   list-style: none;
   padding-left: 15px;
@@ -141,9 +141,31 @@ div.leftPane {
 }
 
 .lbheader {
-  font-size: 12px;
+  font-size: 11px;
   margin-bottom: 10px;
 }
+
+.lb > div {
+  display: inline-block;
+  text-align: left;
+}
+
+.LB-NAM {
+  width: 46px; /*the widest three letters can be, here */
+}
+
+.LB-GRD {
+  width: 31px;
+}
+
+.LB-TIM {
+  width: 63px;
+}
+
+.LB-SCR {
+  width: 50px;
+}
+
 
 .message {
   position: absolute;

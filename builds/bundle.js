@@ -98,18 +98,8 @@
 	      if (!!games) {
 	        (function () {
 	          var gs = JSON.parse(games);
-	          var out = [];
-	          gs.forEach(function (game) {
-	            var initials = game.initials;
-	            var grade = game.grade;
-	            var time = game.time;
-	            var score = game.score;
-
-	            var str = (0, _sprintfJs.sprintf)("%3s  %2s  %8s  %6i", initials, grade, time, score);
-	            out.push(str);
-	          });
 	          setTimeout(function () {
-	            _state.store.dispatch((0, _state.forceOverlayActionCreator)({ mode: "lb", text: out }));
+	            _state.store.dispatch((0, _state.forceOverlayActionCreator)({ mode: "lb", text: gs }));
 	          }, 3000);
 	        })();
 	      }
@@ -6496,13 +6486,32 @@
 	            _react2.default.createElement(
 	              'li',
 	              { className: 'lbheader' },
-	              'NAM   GRD      TIME         SCORE'
+	              'NAM        GRD      TIME         SCORE'
 	            ),
 	            text.map(function (game, i) {
 	              return _react2.default.createElement(
 	                'li',
 	                { className: 'lb', key: i },
-	                game
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'LB-NAM' },
+	                  game.initials
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'LB-GRD' },
+	                  game.grade
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'LB-TIM' },
+	                  game.time
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'LB-SCR' },
+	                  game.score
+	                )
 	              );
 	            })
 	          )
