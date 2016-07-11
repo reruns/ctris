@@ -66,8 +66,10 @@ function update(dt) {
   let text = overlay.text;
   if (pause) {
     let newchar = handleTextInput();
-    if (newchar === 'ENTER' && text.length >= 2) {
-      store.dispatch(setPlayerNameAC(text));
+    if (newchar === 'ENTER') {
+      if (text.length >= 2) {
+        store.dispatch(setPlayerNameAC(text));
+      }
     } else if (newchar === 'BS') {
       store.dispatch(forceOverlayActionCreator({mode: "input", text: text.slice(0,text.length-1)}))
     } else if (text.length < 3) {

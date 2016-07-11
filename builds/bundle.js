@@ -133,8 +133,10 @@
 	  var text = overlay.text;
 	  if (pause) {
 	    var newchar = (0, _input.handleTextInput)();
-	    if (newchar === 'ENTER' && text.length >= 2) {
-	      _state.store.dispatch((0, _state.setPlayerNameAC)(text));
+	    if (newchar === 'ENTER') {
+	      if (text.length >= 2) {
+	        _state.store.dispatch((0, _state.setPlayerNameAC)(text));
+	      }
 	    } else if (newchar === 'BS') {
 	      _state.store.dispatch((0, _state.forceOverlayActionCreator)({ mode: "input", text: text.slice(0, text.length - 1) }));
 	    } else if (text.length < 3) {
