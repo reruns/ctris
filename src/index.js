@@ -4,6 +4,7 @@ import GameView from './components/gameView.js'
 import {Provider} from 'react-redux'
 import React from 'react'
 import {render} from 'react-dom'
+import { sprintf } from 'sprintf-js'
 
 var requestAnimFrame = (() => {
   return window.requestAnimationFrame  ||
@@ -41,10 +42,10 @@ function main() {
       const {games} = res
       if (!!games) {
         let gs = JSON.parse(games);
-        console.log(gs);
         let out = []
         gs.forEach((game) =>{
-          let str = game.grade + " " + game.initials + " " + game.time + " " + game.score
+          let { initials, grade, time, score } = game;
+          let str = sprintf("%3s  %2s  %8s  %6i", initials, grade, time, score)
           out.push(str)
         });
         setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: out}))}, 3000);
@@ -65,7 +66,6 @@ function update(dt) {
   let text = overlay.text;
   if (pause) {
     let newchar = handleTextInput();
-    if (!!newchar) {console.log(newchar);}
     if (newchar === 'ENTER' && text.length >= 2) {
       store.dispatch(setPlayerNameAC(text));
     } else if (newchar === 'BS') {

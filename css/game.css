@@ -100,13 +100,8 @@ div.leftPane {
   position: relative;
   height: 0;
   width: 0;
-}
-
-.textOverlay {
-  position: absolute;
   color: white;
   font-family: sans-serif;
-  left: 40px;
   text-shadow: 1px 1px 0 #000,
     -1px 1px 0 #000,
     1px -1px 0 #000,
@@ -133,13 +128,29 @@ div.leftPane {
     -2px -1px 0 #000;
 }
 
-.message {
-  font-size: 50px;
-  top: 200px;
+.leaderboard {
+  white-space: pre-wrap;
+  position: absolute;
+  top: 80px;
+  font-size: 15px;
+  left: 0px;
+  list-style: none;
+  padding-left: 15px;
+  margin: auto;
+  width: 190px;
 }
 
-li.lb {
-  font-size: 10px;
+.lbheader {
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.message {
+  position: absolute;
+  left: 40px;
+  top: 200px;
+  width: 150px;
+  font-size: 50px;
 }
 
 div.frameCounter {

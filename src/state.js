@@ -18,7 +18,7 @@ var ctris = function(state = INITSTATE, action) {
       newstate.overlay = action.overlay
       return newstate;
     case 'SETPLAYERNAME':
-      newstate.overlay = { mode: "off", text: "" }
+      newstate.overlay = { mode: "message", text: "3" }
       newstate.initials = action.initials
       newstate.pause = false
       return newstate;
@@ -46,6 +46,23 @@ var ctris = function(state = INITSTATE, action) {
       return newstate;
     //unfortunately, most of the other things are pretty entangled.
     case 'UPDATE':
+      if (newstate.countdown > 0) {
+        newstate.countdown -= 1;
+        if (newstate.countdown == 180) {
+          newstate.overlay = {mode: "message", text: "2"}
+        }
+        if (newstate.countdown == 120) {
+          newstate.overlay = {mode: "message", text: "1"}
+        }
+        if (newstate.countdown == 60) {
+          newstate.overlay = {mode: "message", text: "GO"}
+        }
+        if (newstate.countdown == 0) {
+          newstate.overlay = {mode: "off", text: ""}
+        }
+        
+        return newstate;
+      }
       //If we get desynced from 60fps we're screwed anyway, so this should be fine.
       newstate.timer += (1/60)
 
