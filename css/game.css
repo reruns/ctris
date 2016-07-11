@@ -1,7 +1,5 @@
 div {
-    margin: none;
-    padding: none;
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 body {
@@ -169,10 +167,12 @@ div.leftPane {
 
 .message {
   position: absolute;
-  left: 40px;
+  left: 35px;
   top: 200px;
   width: 150px;
   font-size: 50px;
+  margin: auto;
+  text-align: center;
 }
 
 div.frameCounter {
