@@ -7,6 +7,7 @@ import Score from './score.js'
 import Level from './level.js'
 import Grade from './grade.js'
 import LockDelayMeter from './lockDelayMeter.js'
+import TextOverlay from './textOverlay.js'
 import {connect} from 'react-redux'
 
 const GameView = createClass ({
@@ -22,11 +23,7 @@ const GameView = createClass ({
   },
   render() {
     const { store } = this.context;
-    const { gameOver, countdown} = store.getState();
-    let text = "";
-    if (gameOver) {
-      text = "Game Over!"
-    }
+    const { gameOver, overlay} = store.getState();
 
     return (
       <div className="game">
@@ -36,7 +33,7 @@ const GameView = createClass ({
           <Level />
         </div>
         <div className="rightPane">
-          <div className="overlayContainer"><div className="textOverlay">{text}</div></div>
+          <TextOverlay/>
           <NextPiece/>
           <Grid />
           <Timer />

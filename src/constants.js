@@ -1,4 +1,10 @@
 const INITSTATE = {
+  overlay: {
+    mode: "input",
+    text: ""
+  },
+  pause: true,
+  initials: "",
   timer: 0,
   score: 0,
   grade: {current: '9', next: '400'},

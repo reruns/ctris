@@ -1,4 +1,5 @@
 var pressedKeys = {};
+var pressedLetter = '';
 
 function setKey(event, status) {
     var code = event.keyCode;
@@ -24,6 +25,7 @@ function setKey(event, status) {
     }
 
     pressedKeys[key] = status;
+    if (status) {pressedLetter = code};
 }
 
 document.addEventListener('keydown', function(e) {
@@ -55,7 +57,7 @@ let input = {
 
 let history = [];
 
-let handleInput = function() {
+let handleInput = () => {
   let direction = '';
   if (input.isDown('LEFT')) {
     direction = 'L'
@@ -91,4 +93,16 @@ let handleInput = function() {
   return out;
 }
 
-export {handleInput}
+let handleTextInput = () => {
+  let t = pressedLetter
+  pressedLetter = '';
+  if (t == 13) {
+    return 'ENTER'
+  } else if (t == 8) {
+    return 'BS'
+  } else if (t >= 48 && t <= 90) {
+    return String.fromCharCode(t);
+  } else return '';
+}
+
+export {handleInput, handleTextInput}

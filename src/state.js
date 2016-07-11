@@ -14,6 +14,14 @@ var ctris = function(state = INITSTATE, action) {
     case 'dt':
       newstate.dt = action.dt
       return newstate;
+    case 'FORCEOVERLAY':
+      newstate.overlay = action.overlay
+      return newstate;
+    case 'SETPLAYERNAME':
+      newstate.overlay = { mode: "off", text: "" }
+      newstate.initials = action.initials
+      newstate.pause = false
+      return newstate;
     case 'ROTATE':
       newstate.currentPiece = rotate(state.currentPiece, action.dir, state.grid);
       return newstate;
@@ -51,6 +59,10 @@ var ctris = function(state = INITSTATE, action) {
             newstate.nextPieceType = generateTGM1();
             if (newstate.currentPiece.orient == -1) {
               newstate.gameOver = true;
+              newstate.overlay = {
+                mode: "message",
+                text: "Game Over!"
+              }
               return newstate;
             }
           } else {
@@ -189,6 +201,20 @@ let cleanupActionCreator = function () {
   }
 }
 
+let forceOverlayActionCreator = function(text) {
+  return {
+    type: 'FORCEOVERLAY',
+    overlay: text
+  }
+}
+
+let setPlayerNameAC = function(initials) {
+  return {
+    type: 'SETPLAYERNAME',
+    initials: initials
+  }
+}
+
 function _newVal(table, key) {
   for (let i=0; i < table.length; i++) {
     if (key >= table[i][0]) {
@@ -211,4 +237,4 @@ let updateGMQual = function(plevel, level, score, timer) {
   (level == 999 && (score < 126000 || timer > 810)))
 }
 
-export {store, rotateActionCreator, updateActionCreator, cleanupActionCreator}
+export {store, rotateActionCreator, updateActionCreator, cleanupActionCreator, forceOverlayActionCreator, setPlayerNameAC}

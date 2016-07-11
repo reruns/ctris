@@ -1,5 +1,5 @@
-import {store, rotateActionCreator, updateActionCreator, cleanupActionCreator} from './state.js'
-import {handleInput} from './input.js'
+import {store, rotateActionCreator, updateActionCreator, cleanupActionCreator, forceOverlayActionCreator, setPlayerNameAC } from './state.js'
+import {handleInput, handleTextInput} from './input.js'
 import GameView from './components/gameView.js'
 import {Provider} from 'react-redux'
 import React from 'react'
@@ -34,19 +34,53 @@ function main() {
   lastTime = now;
   if (!store.getState().gameOver){
     requestAnimFrame(main);
+  } else {
+    fetch("https://ctris-server.herokuapp.com")
+    .then((res) => { return res.json() })
+    .then((res) => {
+      const {games} = res
+      if (!!games) {
+        let gs = JSON.parse(games);
+        console.log(gs);
+        let out = []
+        gs.forEach((game) =>{
+          let str = game.grade + " " + game.initials + " " + game.time + " " + game.score
+          out.push(str)
+        });
+        setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: out}))}, 3000);
+      }
+    })
+    .catch((res) => {
+      console.log("error fetching leaderboards")
+      console.log(res)
+    })
   }
 }
 
 function update(dt) {
-  let controls = handleInput();
   //this weirdness is because we actually care about what buttons were pressed this frame
   //AND what buttons are being held, separately.
   store.dispatch({type: "dt", dt: dt})
-  if (controls.newButton !== '') {
-    store.dispatch(rotateActionCreator(controls.newButton));
+  const { pause, overlay } = store.getState()
+  let text = overlay.text;
+  if (pause) {
+    let newchar = handleTextInput();
+    if (!!newchar) {console.log(newchar);}
+    if (newchar === 'ENTER' && text.length >= 2) {
+      store.dispatch(setPlayerNameAC(text));
+    } else if (newchar === 'BS') {
+      store.dispatch(forceOverlayActionCreator({mode: "input", text: text.slice(0,text.length-1)}))
+    } else if (text.length < 3) {
+      store.dispatch(forceOverlayActionCreator({mode: "input", text: text+newchar }))
+    }
+  } else {
+    let controls = handleInput();
+    if (controls.newButton !== '') {
+      store.dispatch(rotateActionCreator(controls.newButton));
+    }
+    if (store.getState().are == 31) {
+      store.dispatch(cleanupActionCreator());
+    }
+    store.dispatch(updateActionCreator(controls));
   }
-  if (store.getState().are == 31) {
-    store.dispatch(cleanupActionCreator());
-  }
-  store.dispatch(updateActionCreator(controls));
 }
