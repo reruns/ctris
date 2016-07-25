@@ -38,9 +38,14 @@ function main() {
   } else {
     //get the data from the state
     let {grade, score, timer, initials} = store.getState();
+    let body = JSON.stringify({initials: initials, grade: grade.current, time: +timer.toFixed(2), score: score})
     fetch("https://ctris-server.herokuapp.com", {
+      header: {
+        "Accept": 'application/json',
+        "Content-Type": "application/json"
+      },
       method: "POST", 
-      body: {initials: initials, grade: grade.current, time: timer, score: score}
+      body: body
     }).then((res) => { return res.json() })
     .then((res) => {
       const {games} = res

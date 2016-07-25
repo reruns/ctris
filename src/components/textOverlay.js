@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import React, { createClass } from 'react'
+import {formatTime} from '../util.js'
 
 const mapStateToProps = (state) => {
   return {
@@ -34,7 +35,7 @@ const TextOverlay = createClass({
                   return <li className="lb" key={i}>
                     <div className="LB-NAM">{game.initials}</div>
                     <div className="LB-GRD">{game.grade}</div>
-                    <div className="LB-TIM">{game.time}</div>
+                    <div className="LB-TIM">{formatTime(game.time)}</div>
                     <div className="LB-SCR">{game.score}</div>
                   </li>;
               })}
