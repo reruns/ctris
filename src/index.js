@@ -36,13 +36,16 @@ function main() {
   if (!store.getState().gameOver){
     requestAnimFrame(main);
   } else {
-    fetch("https://ctris-server.herokuapp.com")
-    .then((res) => { return res.json() })
+    //get the data from the state
+    let {grade, score, timer, initials} = store.getState();
+    fetch("https://ctris-server.herokuapp.com", {
+      method: "POST", 
+      body: {initials: initials, grade: grade.current, time: timer, score: score}
+    }).then((res) => { return res.json() })
     .then((res) => {
       const {games} = res
       if (!!games) {
-        let gs = JSON.parse(games);
-        setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: gs}))}, 3000);
+        setTimeout(() => {store.dispatch(forceOverlayActionCreator({mode: "lb", text: games}))}, 3000);
       }
     })
     .catch((res) => {

@@ -90,18 +90,27 @@
 	  if (!_state.store.getState().gameOver) {
 	    requestAnimFrame(main);
 	  } else {
-	    fetch("https://ctris-server.herokuapp.com").then(function (res) {
+	    //get the data from the state
+
+	    var _store$getState = _state.store.getState();
+
+	    var grade = _store$getState.grade;
+	    var score = _store$getState.score;
+	    var timer = _store$getState.timer;
+	    var initials = _store$getState.initials;
+
+	    fetch("https://ctris-server.herokuapp.com", {
+	      method: "POST",
+	      body: { initials: initials, grade: grade.current, time: timer, score: score }
+	    }).then(function (res) {
 	      return res.json();
 	    }).then(function (res) {
 	      var games = res.games;
 
 	      if (!!games) {
-	        (function () {
-	          var gs = JSON.parse(games);
-	          setTimeout(function () {
-	            _state.store.dispatch((0, _state.forceOverlayActionCreator)({ mode: "lb", text: gs }));
-	          }, 3000);
-	        })();
+	        setTimeout(function () {
+	          _state.store.dispatch((0, _state.forceOverlayActionCreator)({ mode: "lb", text: games }));
+	        }, 3000);
 	      }
 	    }).catch(function (res) {
 	      console.log("error fetching leaderboards");
@@ -115,10 +124,10 @@
 	  //AND what buttons are being held, separately.
 	  _state.store.dispatch({ type: "dt", dt: dt });
 
-	  var _store$getState = _state.store.getState();
+	  var _store$getState2 = _state.store.getState();
 
-	  var pause = _store$getState.pause;
-	  var overlay = _store$getState.overlay;
+	  var pause = _store$getState2.pause;
+	  var overlay = _store$getState2.overlay;
 
 	  var text = overlay.text;
 	  if (pause) {
